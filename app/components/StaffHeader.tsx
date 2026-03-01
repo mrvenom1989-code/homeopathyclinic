@@ -36,21 +36,22 @@ export default function StaffHeader() {
 
       {/* --- Logo Section --- */}
       <Link href="/dashboard" className="flex items-center gap-3 hover:opacity-95 transition">
-        <div className="relative w-14 h-14">
+        <div className="shrink-0 overflow-hidden shadow-md rounded">
           <Image
-            src="/logo-placeholder.png"
+            src="/logo.jpg"
             alt="Clinic Logo"
-            fill
-            className="object-contain"
+            width={160}
+            height={80}
+            className="w-28 h-auto object-cover"
             priority
           />
         </div>
         <div className="leading-tight flex flex-col justify-center">
-          <h1 className="font-serif text-2xl font-bold text-[#B09B5C] tracking-wide">
-            CLINIC NAME
+          <h1 className="font-serif text-xl font-bold text-teal-950 tracking-wide">
+            Dr. Mayank Raval's
           </h1>
-          <span className="text-[10px] font-bold text-[#0f172a] tracking-[0.2em] uppercase">
-            Multi-Speciality Homeopathy Clinic
+          <span className="text-[10px] font-bold text-amber-500 tracking-[0.15em] uppercase">
+            Advanced Homeopathy
           </span>
         </div>
       </Link>

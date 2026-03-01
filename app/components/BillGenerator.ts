@@ -41,29 +41,29 @@ export const generateBill = async (data: BillData) => {
 
   // A. Logo (Top Left)
   try {
-    const logo = await loadImage("/logo-placeholder.png");
-    // Add image: x, y, width, height
-    doc.addImage(logo, "PNG", 10, 10, 25, 25);
+    const logo = await loadImage("/logo.jpg");
+    // Add image: x, y, width, height (Adjusted width for landscape logo)
+    doc.addImage(logo, "JPEG", 10, 10, 40, 20);
   } catch {
     console.warn("Logo not found");
   }
 
   // B. Title & Subtitle (Center)
-  doc.setFontSize(24);
-  doc.setTextColor(176, 155, 92); // Gold (#B09B5C)
+  doc.setFontSize(22);
+  doc.setTextColor(19, 56, 47); // Dark Green (#13382f)
   doc.setFont("times", "bold");
-  doc.text("CLINIC NAME", 105, 20, { align: "center" });
+  doc.text("Dr. Mayank Raval's", 120, 20, { align: "center" });
 
   doc.setFontSize(10);
-  doc.setTextColor(30, 58, 41); // Dark Green (#0f172a)
+  doc.setTextColor(245, 158, 11); // Amber 500
   doc.setFont("helvetica", "bold");
-  doc.text("Multi-Speciality Homeopathy Clinic", 105, 26, { align: "center" });
+  doc.text("ADVANCED HOMEOPATHY", 120, 26, { align: "center" });
 
   // C. Slogan (Top Right)
   doc.setFontSize(9);
   doc.setFont("helvetica", "italic");
   doc.setTextColor(100, 100, 100);
-  doc.text('"Ayurveda: Shashwato Swasthya"', 105, 32, { align: "center" });
+  doc.text('"Precision. Depth. Lasting Healing."', 120, 32, { align: "center" });
 
   // Divider Line
   doc.setDrawColor(176, 155, 92);
@@ -135,7 +135,7 @@ export const generateBill = async (data: BillData) => {
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(0, 0, 0);
-  doc.text("For Clinic Name", 150, signatureY);
+  doc.text("Dr. Mayank Raval", 150, signatureY);
 
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
@@ -148,15 +148,15 @@ export const generateBill = async (data: BillData) => {
   // Appointment Number (Larger)
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(30, 58, 41); // Dark Green
-  doc.text("For Appointment: +91-6352135799", 105, pageHeight - 22, { align: "center" });
+  doc.setTextColor(19, 56, 47); // Dark Green
+  doc.text("For Appointment: +91 99791 33069", 105, pageHeight - 22, { align: "center" });
 
   // Address
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(0, 0, 0);
-  doc.text("123 Clinic Address, City - 123456", 105, pageHeight - 15, { align: "center" });
-  doc.text("www.clinicwebsite.com  |  contact@clinic.com", 105, pageHeight - 10, { align: "center" });
+  doc.text("Ahmedabad", 105, pageHeight - 15, { align: "center" });
+  doc.text("lifetronhomeopathyamd@gmail.com", 105, pageHeight - 10, { align: "center" });
 
   // Save
   doc.save(`Bill_${data.patientName}_${data.billNo}.pdf`);

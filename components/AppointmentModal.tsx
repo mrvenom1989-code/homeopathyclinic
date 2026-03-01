@@ -85,7 +85,7 @@ export default function AppointmentModal({
   const [patientName, setPatientName] = useState(existingAppointment?.patientName || initialData?.patientName || "");
   const [patientId, setPatientId] = useState<string | null>(existingAppointment?.patientId || null);
   const [phone, setPhone] = useState(existingAppointment?.phone || initialData?.phone || "");
-  const [doctor, setDoctor] = useState(existingAppointment?.doctor || "Dr. Chirag Raval");
+  const [doctor, setDoctor] = useState(existingAppointment?.doctor || "Dr. Mayank Raval");
   const [type, setType] = useState(existingAppointment?.type || "Consultation");
 
   // ✅ Ensure date is a valid string
@@ -273,7 +273,7 @@ export default function AppointmentModal({
           <div>
             <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Entry Type</label>
             <div className="grid grid-cols-2 gap-2">
-              {['Consultation', 'Procedure-1', 'Procedure-2', 'Procedure-3', 'Unavailable'].map((t) => (
+              {['Consultation', 'Unavailable'].map((t) => (
                 <button
                   key={t}
                   type="button"
@@ -434,8 +434,7 @@ export default function AppointmentModal({
               <div>
                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Doctor</label>
                 <select className="w-full p-2 border rounded text-sm" value={doctor} onChange={(e) => setDoctor(e.target.value)}>
-                  <option>Dr. Chirag Raval</option>
-                  <option>Dr. Dipal Raval</option>
+                  <option>Dr. Mayank Raval</option>
                 </select>
               </div>
             </>

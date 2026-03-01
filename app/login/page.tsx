@@ -43,21 +43,22 @@ export default function LoginPage() {
 
       <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden relative z-10 animate-in fade-in zoom-in duration-300">
 
-        <div className="bg-gray-50 p-8 pb-6 text-center border-b border-gray-100 flex flex-col items-center">
-          <div className="relative w-20 h-20 mb-3">
+        <div className="bg-[#13382f] p-8 pb-6 text-center shadow-inner flex flex-col items-center border-b border-teal-900">
+          <div className="mb-3 rounded overflow-hidden shadow-2xl">
             <Image
-              src="/logo-placeholder.png"
+              src="/logo.jpg"
               alt="Clinic Logo"
-              fill
-              className="object-contain"
+              width={240}
+              height={120}
+              className="w-56 h-auto object-cover"
               priority
             />
           </div>
-          <h1 className="font-serif text-2xl font-bold text-[#B09B5C] tracking-wide">
-            CLINIC NAME
+          <h1 className="font-serif text-2xl font-bold text-white tracking-wide">
+            Dr. Mayank Raval's
           </h1>
-          <span className="text-[10px] font-bold text-[#0f172a] tracking-[0.2em] uppercase mt-1">
-            Multi-Speciality Homeopathy Clinic
+          <span className="text-[10px] font-bold text-amber-500 tracking-[0.2em] uppercase mt-1">
+            Advanced Homeopathy
           </span>
           <div className="mt-6 flex items-center gap-2 text-xs font-bold uppercase text-gray-400 tracking-wider">
             <Lock size={12} /> Staff Portal Access
