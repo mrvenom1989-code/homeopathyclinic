@@ -21,6 +21,7 @@ import StaffHeader from "@/app/components/StaffHeader";
 import { generateBill } from "@/app/components/BillGenerator";
 
 import { MEDICINE_TYPES } from "./constants";
+import { VEHICLE_OPTIONS, POTENCY_OPTIONS } from "../patients/constants";
 import { cleanName, getPatientDisplayName } from "./utils";
 import InventoryRow from "./components/InventoryRow";
 import QueueItem from "./components/QueueItem";
@@ -53,12 +54,12 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({
-    name: "", stock: "", price: "", minStock: "", mfgDate: "", expDate: "", type: ""
+    name: "", stock: "", price: "", minStock: "", mfgDate: "", expDate: "", type: "", potency: "", vehicle: ""
   });
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newMed, setNewMed] = useState({
-    name: "", type: "Tablet", stock: "0", price: "0", minStock: "24", mfgDate: "", expDate: ""
+    name: "", type: "Dilution", potency: "30c", vehicle: "Pills", stock: "0", price: "0", minStock: "24", mfgDate: "", expDate: ""
   });
 
   const [dispenseQtys, setDispenseQtys] = useState<{ [key: string]: string }>({});
@@ -244,7 +245,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
       ].filter(Boolean).join(" "); // Joins dosage and instruction with a space
 
       return {
-        name: `${medName} (${item.unit || '-'})`,
+        name: `${medName} ${item.panchkarma && item.panchkarma !== "-" ? `[${item.panchkarma}]` : ""} (${item.unit || '-'})`,
         qty: qty,
         amount: lineTotal,
         dosage: dosageInfo || "-" // Pass the combined string
@@ -430,7 +431,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
   const handleAddNew = async () => {
     await createMedicine(newMed);
     setIsAddModalOpen(false);
-    setNewMed({ name: "", type: "Tablet", stock: "0", price: "0", minStock: "10", mfgDate: "", expDate: "" });
+    setNewMed({ name: "", type: "Dilution", potency: "30c", vehicle: "Pills", stock: "0", price: "0", minStock: "10", mfgDate: "", expDate: "" });
     refreshInventory(true);
   };
 
@@ -450,7 +451,9 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
       minStock: (med.minStock || 24).toString(),
       mfgDate: med.mfgDate ? new Date(med.mfgDate).toISOString().split('T')[0] : "",
       expDate: med.expDate ? new Date(med.expDate).toISOString().split('T')[0] : "",
-      type: med.type || "Tablet"
+      type: med.type || "Dilution",
+      potency: med.potency || "",
+      vehicle: med.vehicle || ""
     });
   };
 
@@ -579,8 +582,8 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
 
       <div className="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm z-10 shrink-0">
         <div className="flex items-center gap-3">
-          <div className="bg-[#1e3a29] text-white p-2 rounded-lg"><Pill size={24} /></div>
-          <h1 className="text-xl font-serif font-bold text-[#1e3a29]">Pharmacy Dashboard</h1>
+          <div className="bg-[#0f172a] text-white p-2 rounded-lg"><Pill size={24} /></div>
+          <h1 className="text-xl font-serif font-bold text-[#0f172a]">Pharmacy Dashboard</h1>
         </div>
 
         <div className="flex gap-4">
@@ -592,14 +595,14 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
           </button>
 
           <div className="flex bg-gray-100 p-1 rounded-lg">
-            <button onClick={() => switchTab('queue')} className={`px-4 py-2 text-sm font-bold rounded-md transition flex items-center gap-2 ${activeTab === 'queue' ? 'bg-white shadow text-[#1e3a29]' : 'text-gray-500'}`}>
+            <button onClick={() => switchTab('queue')} className={`px-4 py-2 text-sm font-bold rounded-md transition flex items-center gap-2 ${activeTab === 'queue' ? 'bg-white shadow text-[#0f172a]' : 'text-gray-500'}`}>
               <Clock size={16} /> Live Queue
               {queue.some(q => q.prescriptions.some((p: any) => p.items.some((i: any) => i.status === 'PENDING'))) && <span className="bg-red-500 w-2 h-2 rounded-full animate-pulse"></span>}
             </button>
-            <button onClick={() => switchTab('history')} className={`px-4 py-2 text-sm font-bold rounded-md transition flex items-center gap-2 ${activeTab === 'history' ? 'bg-white shadow text-[#1e3a29]' : 'text-gray-500'}`}>
+            <button onClick={() => switchTab('history')} className={`px-4 py-2 text-sm font-bold rounded-md transition flex items-center gap-2 ${activeTab === 'history' ? 'bg-white shadow text-[#0f172a]' : 'text-gray-500'}`}>
               <History size={16} /> History
             </button>
-            <button onClick={() => switchTab('inventory')} className={`px-4 py-2 text-sm font-bold rounded-md transition flex items-center gap-2 ${activeTab === 'inventory' ? 'bg-white shadow text-[#1e3a29]' : 'text-gray-500'}`}>
+            <button onClick={() => switchTab('inventory')} className={`px-4 py-2 text-sm font-bold rounded-md transition flex items-center gap-2 ${activeTab === 'inventory' ? 'bg-white shadow text-[#0f172a]' : 'text-gray-500'}`}>
               <Package size={16} /> Inventory
             </button>
           </div>
@@ -607,7 +610,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
       </div>
 
       <div className="flex-1 overflow-y-auto p-8">
-        {loading ? <div className="flex justify-center mt-20"><Loader2 className="animate-spin text-[#c5a059]" size={40} /></div> : (
+        {loading ? <div className="flex justify-center mt-20"><Loader2 className="animate-spin text-[#0284c7]" size={40} /></div> : (
           <>
             {activeTab === 'queue' && (
               <div className="max-w-6xl mx-auto space-y-4">
@@ -649,7 +652,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                     <input
                       type="text"
                       placeholder="Search Name, Phone or ID..."
-                      className="w-full pl-10 p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#c5a059]"
+                      className="w-full pl-10 p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#0284c7]"
                       value={historySearch}
                       onChange={(e) => setHistorySearch(e.target.value)}
                     />
@@ -659,7 +662,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                     <span className="text-gray-400">-</span>
                     <input type="date" className="p-2 border rounded-lg text-sm" value={dateRange.end} onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })} />
                   </div>
-                  {isSearchingHistory && <Loader2 className="animate-spin text-[#c5a059]" size={20} />}
+                  {isSearchingHistory && <Loader2 className="animate-spin text-[#0284c7]" size={20} />}
                 </div>
 
                 <div className="space-y-4">
@@ -699,7 +702,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                 <div className="flex justify-between mb-6">
                   <div className="relative w-96">
                     <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-                    <input type="text" placeholder="Search medicines..." className="w-full pl-10 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#c5a059] outline-none" value={inventorySearch} onChange={(e) => setInventorySearch(e.target.value)} />
+                    <input type="text" placeholder="Search medicines..." className="w-full pl-10 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#0284c7] outline-none" value={inventorySearch} onChange={(e) => setInventorySearch(e.target.value)} />
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => refreshInventory(false)} className="p-2 bg-white border rounded hover:bg-gray-50 text-gray-600"><RefreshCw size={18} /></button>
@@ -711,13 +714,13 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                       <Filter size={16} /> Low Stock
                     </button>
 
-                    <button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2 bg-[#1e3a29] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#162b1e]"><Plus size={16} /> Add New</button>
+                    <button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2 bg-[#0f172a] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#020617]"><Plus size={16} /> Add New</button>
                   </div>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                   <table className="w-full text-sm text-left">
-                    <thead className="bg-[#1e3a29] text-white text-xs uppercase">
+                    <thead className="bg-[#0f172a] text-white text-xs uppercase">
                       <tr>
                         <th className="p-4 font-medium">Name</th>
                         <th className="p-4 font-medium">Type</th>
@@ -750,14 +753,14 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
             {showWalletModal && (
               <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
                 <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 animate-in zoom-in-95">
-                  <h3 className="text-lg font-bold text-[#1e3a29] mb-4 flex items-center gap-2"><Wallet /> Manage Wallet</h3>
+                  <h3 className="text-lg font-bold text-[#0f172a] mb-4 flex items-center gap-2"><Wallet /> Manage Wallet</h3>
                   <p className="text-sm text-gray-500 mb-4">Update balance for {walletPatient?.name}</p>
 
                   <div className="space-y-4">
                     <div>
                       <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Transaction Type</label>
                       <select
-                        className="w-full p-2 border rounded bg-gray-50 focus:ring-2 focus:ring-[#c5a059]"
+                        className="w-full p-2 border rounded bg-gray-50 focus:ring-2 focus:ring-[#0284c7]"
                         value={walletType}
                         onChange={(e) => setWalletType(e.target.value as "CREDIT" | "DUE")}
                       >
@@ -771,7 +774,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                       <input
                         type="number"
                         placeholder="Enter Amount (e.g. 500)"
-                        className="w-full p-3 border rounded-lg text-lg font-bold mb-4 focus:ring-2 focus:ring-[#c5a059] outline-none"
+                        className="w-full p-3 border rounded-lg text-lg font-bold mb-4 focus:ring-2 focus:ring-[#0284c7] outline-none"
                         value={walletAmount}
                         onChange={(e) => setWalletAmount(e.target.value)}
                         autoFocus
@@ -796,31 +799,46 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
             {isAddModalOpen && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                 <div className="bg-white rounded-xl p-8 w-[550px] shadow-2xl animate-in zoom-in">
-                  <h2 className="text-xl font-bold mb-6 text-[#1e3a29]">Add New Medicine</h2>
+                  <h2 className="text-xl font-bold mb-6 text-[#0f172a]">Add New Medicine</h2>
                   {/* ... Add New Form ... */}
                   <div className="space-y-4">
                     <div>
                       <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Medicine Name</label>
-                      <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#c5a059] outline-none" placeholder="e.g. Paracetamol" value={newMed.name} onChange={e => setNewMed({ ...newMed, name: e.target.value })} />
+                      <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#0284c7] outline-none" placeholder="e.g. Paracetamol" value={newMed.name} onChange={e => setNewMed({ ...newMed, name: e.target.value })} />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Type</label>
-                        <select className="w-full p-2.5 border rounded text-sm bg-white focus:ring-2 focus:ring-[#c5a059] outline-none" value={newMed.type} onChange={e => setNewMed({ ...newMed, type: e.target.value })}>
+                        <select className="w-full p-2.5 border rounded text-sm bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" value={newMed.type} onChange={e => setNewMed({ ...newMed, type: e.target.value })}>
                           {MEDICINE_TYPES.map(t => <option key={t}>{t}</option>)}
                         </select>
                       </div>
                       <div>
+                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Vehicle</label>
+                        <select className="w-full p-2.5 border rounded text-sm bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" value={newMed.vehicle} onChange={e => setNewMed({ ...newMed, vehicle: e.target.value })}>
+                          <option value="">None</option>
+                          {VEHICLE_OPTIONS.map((v: string) => <option key={v}>{v}</option>)}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Potency / Strength</label>
+                        <input list="pharma-potency-opts" className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#0284c7] outline-none" placeholder="e.g. 30c" value={newMed.potency} onChange={e => setNewMed({ ...newMed, potency: e.target.value })} />
+                        <datalist id="pharma-potency-opts">{POTENCY_OPTIONS.map((opt: string) => <option key={opt}>{opt}</option>)}</datalist>
+                      </div>
+                      <div>
                         <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Initial Stock</label>
-                        <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#c5a059] outline-none" type="number" placeholder="0" value={newMed.stock} onChange={e => setNewMed({ ...newMed, stock: e.target.value })} />
+                        <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#0284c7] outline-none" type="number" placeholder="0" value={newMed.stock} onChange={e => setNewMed({ ...newMed, stock: e.target.value })} />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Price (₹)</label>
-                        <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#c5a059] outline-none" type="number" placeholder="0" value={newMed.price} onChange={e => setNewMed({ ...newMed, price: e.target.value })} />
+                        <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#0284c7] outline-none" type="number" placeholder="0" value={newMed.price} onChange={e => setNewMed({ ...newMed, price: e.target.value })} />
                       </div>
                       <div>
                         <label className="block text-xs font-bold uppercase mb-1 text-red-500">Min. Stock Alert</label>
@@ -831,17 +849,17 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                     <div className="grid grid-cols-2 gap-4 pt-2 border-t">
                       <div>
                         <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Mfg. Date</label>
-                        <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#c5a059] outline-none" type="date" value={newMed.mfgDate} onChange={e => setNewMed({ ...newMed, mfgDate: e.target.value })} />
+                        <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#0284c7] outline-none" type="date" value={newMed.mfgDate} onChange={e => setNewMed({ ...newMed, mfgDate: e.target.value })} />
                       </div>
                       <div>
                         <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Exp. Date</label>
-                        <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#c5a059] outline-none" type="date" value={newMed.expDate} onChange={e => setNewMed({ ...newMed, expDate: e.target.value })} />
+                        <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#0284c7] outline-none" type="date" value={newMed.expDate} onChange={e => setNewMed({ ...newMed, expDate: e.target.value })} />
                       </div>
                     </div>
 
                     <div className="flex gap-3 pt-6">
                       <button onClick={() => setIsAddModalOpen(false)} className="flex-1 bg-gray-100 text-gray-600 font-bold py-3 rounded-lg text-sm hover:bg-gray-200">Cancel</button>
-                      <button onClick={handleAddNew} className="flex-1 bg-[#1e3a29] text-white font-bold py-3 rounded-lg text-sm hover:bg-[#162b1e]">Create Item</button>
+                      <button onClick={handleAddNew} className="flex-1 bg-[#0f172a] text-white font-bold py-3 rounded-lg text-sm hover:bg-[#020617]">Create Item</button>
                     </div>
                   </div>
                 </div>
@@ -854,7 +872,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                   {/* Walk-in Modal Content (Already correct in previous steps) */}
                   <div className="w-1/2 border-r bg-gray-50 flex flex-col">
                     <div className="p-4 border-b bg-white">
-                      <h3 className="font-bold text-lg text-[#1e3a29] mb-3">Select Medicine</h3>
+                      <h3 className="font-bold text-lg text-[#0f172a] mb-3">Select Medicine</h3>
                       <div className="relative"><Search className="absolute left-3 top-2.5 text-gray-400" size={18} /><input autoFocus type="text" placeholder="Search to add..." className="w-full pl-10 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" value={walkInSearch} onChange={(e) => setWalkInSearch(e.target.value)} /></div>
                     </div>
                     <div className="flex-1 overflow-y-auto p-2">
@@ -865,7 +883,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                           className="w-full text-left p-3 mb-2 bg-white border rounded-lg hover:border-blue-500 hover:shadow-sm transition group"
                         >
                           <div className="flex justify-between">
-                            <span className="font-bold text-[#1e3a29]">{med.name}</span>
+                            <span className="font-bold text-[#0f172a]">{med.name}</span>
                             <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">Stock: {med.stock}</span>
                           </div>
                           <div className="text-xs text-gray-500 mt-1 flex justify-between">
@@ -877,19 +895,19 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                     </div>
                   </div>
                   <div className="w-1/2 flex flex-col bg-white">
-                    <div className="p-4 border-b flex justify-between items-center bg-[#1e3a29] text-white">
+                    <div className="p-4 border-b flex justify-between items-center bg-[#0f172a] text-white">
                       <h3 className="font-bold text-lg">Direct Sale (Walk-in)</h3>
                       <button onClick={() => setIsWalkInModalOpen(false)} className="hover:text-red-300"><X size={20} /></button>
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                      <div className="flex items-center gap-2 mb-2"><input type="checkbox" id="guestCheck" checked={isGuest} onChange={(e) => { setIsGuest(e.target.checked); setWalkInDetails(prev => ({ ...prev, patientId: "", patientName: "" })); }} className="w-4 h-4 text-[#1e3a29] focus:ring-[#1e3a29] border-gray-300 rounded" /><label htmlFor="guestCheck" className="text-sm font-bold text-gray-600 select-none cursor-pointer">Guest (Not a Patient)</label></div>
+                      <div className="flex items-center gap-2 mb-2"><input type="checkbox" id="guestCheck" checked={isGuest} onChange={(e) => { setIsGuest(e.target.checked); setWalkInDetails(prev => ({ ...prev, patientId: "", patientName: "" })); }} className="w-4 h-4 text-[#0f172a] focus:ring-[#0f172a] border-gray-300 rounded" /><label htmlFor="guestCheck" className="text-sm font-bold text-gray-600 select-none cursor-pointer">Guest (Not a Patient)</label></div>
                       {isGuest ? (
                         <div className="flex items-center border rounded p-2 focus-within:ring-2 focus-within:ring-blue-500"><User size={18} className="text-gray-400 mr-2" /><input placeholder="Enter Guest Name *" className="flex-1 text-sm outline-none" value={walkInDetails.patientName} onChange={e => setWalkInDetails({ ...walkInDetails, patientName: e.target.value })} /></div>
                       ) : (
                         <div className="relative" ref={patientSearchRef}>
                           <div className="flex items-center border rounded p-2 focus-within:ring-2 focus-within:ring-blue-500"><Search size={18} className="text-gray-400 mr-2" /><input placeholder="Search Patient Name *" className="flex-1 text-sm outline-none" value={walkInDetails.patientName} onChange={e => setWalkInDetails({ ...walkInDetails, patientName: e.target.value, patientId: "" })} /></div>
                           {showPatientSearch && patientSuggestions.length > 0 && (
-                            <div className="absolute top-full left-0 w-full bg-white border shadow-lg rounded mt-1 z-50 max-h-40 overflow-y-auto">{patientSuggestions.map(p => (<div key={p.id} onClick={() => selectPatient(p)} className="p-2 text-sm hover:bg-gray-100 cursor-pointer border-b"><div className="font-bold text-[#1e3a29]">{p.name}</div><div className="text-xs text-gray-500">{p.phone}</div></div>))}</div>
+                            <div className="absolute top-full left-0 w-full bg-white border shadow-lg rounded mt-1 z-50 max-h-40 overflow-y-auto">{patientSuggestions.map(p => (<div key={p.id} onClick={() => selectPatient(p)} className="p-2 text-sm hover:bg-gray-100 cursor-pointer border-b"><div className="font-bold text-[#0f172a]">{p.name}</div><div className="text-xs text-gray-500">{p.phone}</div></div>))}</div>
                           )}
                         </div>
                       )}
@@ -910,8 +928,8 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                     <div className="p-4 border-t bg-gray-50 space-y-3">
                       <div className="flex justify-between items-center text-sm"><span className="font-bold text-gray-600">Subtotal:</span><span>₹{walkInCart.reduce((acc, i) => acc + (i.price * i.qty), 0)}</span></div>
                       <div className="flex justify-between items-center text-sm"><span className="font-bold text-gray-600 flex items-center gap-1"><BadgePercent size={14} /> Discount (%):</span><input type="number" placeholder="0" className="w-20 p-1 border rounded text-right outline-none" value={walkInDetails.discount} onChange={e => setWalkInDetails({ ...walkInDetails, discount: e.target.value })} /></div>
-                      <div className="flex justify-between items-center text-lg font-bold text-[#1e3a29] border-t pt-2"><span>Grand Total:</span><span>{(() => { const sub = walkInCart.reduce((acc, i) => acc + (i.price * i.qty), 0); const discPercent = parseFloat(walkInDetails.discount) || 0; const discAmount = (sub * discPercent) / 100; return `₹${(sub - discAmount).toFixed(0)}`; })()}</span></div>
-                      <button onClick={handleWalkInCheckout} className="w-full bg-[#1e3a29] text-white py-3 rounded-lg font-bold text-sm hover:bg-[#162b1e] transition shadow-md flex justify-center items-center gap-2"><CheckCircle size={16} /> Complete Sale</button>
+                      <div className="flex justify-between items-center text-lg font-bold text-[#0f172a] border-t pt-2"><span>Grand Total:</span><span>{(() => { const sub = walkInCart.reduce((acc, i) => acc + (i.price * i.qty), 0); const discPercent = parseFloat(walkInDetails.discount) || 0; const discAmount = (sub * discPercent) / 100; return `₹${(sub - discAmount).toFixed(0)}`; })()}</span></div>
+                      <button onClick={handleWalkInCheckout} className="w-full bg-[#0f172a] text-white py-3 rounded-lg font-bold text-sm hover:bg-[#020617] transition shadow-md flex justify-center items-center gap-2"><CheckCircle size={16} /> Complete Sale</button>
                     </div>
                   </div>
                 </div>

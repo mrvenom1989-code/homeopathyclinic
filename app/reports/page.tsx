@@ -105,7 +105,7 @@ export default function ReportsPage() {
             {/* Header Controls */}
             <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4 print:hidden">
                <div>
-                  <h1 className="text-3xl font-serif font-bold text-[#1e3a29]">Clinic Reports</h1>
+                  <h1 className="text-3xl font-serif font-bold text-[#0f172a]">Clinic Reports</h1>
                   <p className="text-gray-500 text-sm mt-1">Analytics and performance overview.</p>
                </div>
 
@@ -119,7 +119,7 @@ export default function ReportsPage() {
                      <span className="text-xs font-bold text-gray-500 uppercase">To</span>
                      <input type="date" className="text-sm outline-none bg-transparent" value={dateRange.end} onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })} />
                   </div>
-                  <button onClick={loadReports} className="bg-[#1e3a29] text-white p-2 rounded hover:bg-[#162b1e] transition">
+                  <button onClick={loadReports} className="bg-[#0f172a] text-white p-2 rounded hover:bg-[#020617] transition">
                      <RefreshCwIcon size={16} />
                   </button>
                </div>
@@ -128,7 +128,7 @@ export default function ReportsPage() {
                   <button onClick={() => window.print()} className="flex items-center gap-2 bg-white border border-gray-300 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50">
                      <Printer size={16} /> Print
                   </button>
-                  <button onClick={handleExport} className="flex items-center gap-2 bg-[#c5a059] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#b08d4b]">
+                  <button onClick={handleExport} className="flex items-center gap-2 bg-[#0284c7] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#0369a1]">
                      <Download size={16} /> Export CSV
                   </button>
                </div>
@@ -136,14 +136,14 @@ export default function ReportsPage() {
 
             {/* --- PRINT HEADER --- */}
             <div className="hidden print:block mb-8 text-center border-b pb-4">
-               <h1 className="text-2xl font-bold text-black">RUDRA AYURVED - REPORT</h1>
+               <h1 className="text-2xl font-bold text-black">CLINIC - REPORT</h1>
                <p className="text-sm text-gray-600">
                   Period: {new Date(dateRange.start).toLocaleDateString('en-GB')} to {new Date(dateRange.end).toLocaleDateString('en-GB')}
                </p>
             </div>
 
             {loading ? (
-               <div className="h-64 flex items-center justify-center text-[#c5a059]">
+               <div className="h-64 flex items-center justify-center text-[#0284c7]">
                   <Loader2 className="animate-spin" size={48} />
                </div>
             ) : data && (
@@ -154,7 +154,7 @@ export default function ReportsPage() {
                      {/* ✅ Total Revenue (Masked) */}
                      <div
                         onClick={() => setFilter('ALL')}
-                        className={`p-6 rounded-xl shadow-sm border cursor-pointer transition transform hover:scale-105 ${filter === 'ALL' ? 'bg-[#1e3a29] text-white border-[#1e3a29]' : 'bg-white border-gray-100 text-[#1e3a29]'}`}
+                        className={`p-6 rounded-xl shadow-sm border cursor-pointer transition transform hover:scale-105 ${filter === 'ALL' ? 'bg-[#0f172a] text-white border-[#0f172a]' : 'bg-white border-gray-100 text-[#0f172a]'}`}
                      >
                         <div className="flex justify-between items-start">
                            <div>
@@ -191,7 +191,7 @@ export default function ReportsPage() {
                      {/* Appointments */}
                      <div
                         onClick={() => setFilter('APPOINTMENT')}
-                        className={`p-6 rounded-xl shadow-sm border cursor-pointer transition transform hover:scale-105 ${filter === 'APPOINTMENT' ? 'bg-[#c5a059] text-white border-[#c5a059]' : 'bg-white border-gray-100 text-[#1e3a29]'}`}
+                        className={`p-6 rounded-xl shadow-sm border cursor-pointer transition transform hover:scale-105 ${filter === 'APPOINTMENT' ? 'bg-[#0284c7] text-white border-[#0284c7]' : 'bg-white border-gray-100 text-[#0f172a]'}`}
                      >
                         <div className="flex justify-between items-start">
                            <div>
@@ -208,7 +208,7 @@ export default function ReportsPage() {
                      {/* Pharmacy */}
                      <div
                         onClick={() => setFilter('PHARMACY')}
-                        className={`p-6 rounded-xl shadow-sm border cursor-pointer transition transform hover:scale-105 ${filter === 'PHARMACY' ? 'bg-orange-600 text-white border-orange-600' : 'bg-white border-gray-100 text-[#1e3a29]'}`}
+                        className={`p-6 rounded-xl shadow-sm border cursor-pointer transition transform hover:scale-105 ${filter === 'PHARMACY' ? 'bg-orange-600 text-white border-orange-600' : 'bg-white border-gray-100 text-[#0f172a]'}`}
                      >
                         <div className="flex justify-between items-start">
                            <div>
@@ -225,11 +225,11 @@ export default function ReportsPage() {
                      {/* ✅ Panchkarma Card */}
                      <div
                         onClick={() => setFilter('PANCHKARMA')}
-                        className={`p-6 rounded-xl shadow-sm border cursor-pointer transition transform hover:scale-105 ${filter === 'PANCHKARMA' ? 'bg-purple-600 text-white border-purple-600' : 'bg-white border-gray-100 text-[#1e3a29]'}`}
+                        className={`p-6 rounded-xl shadow-sm border cursor-pointer transition transform hover:scale-105 ${filter === 'PANCHKARMA' ? 'bg-purple-600 text-white border-purple-600' : 'bg-white border-gray-100 text-[#0f172a]'}`}
                      >
                         <div className="flex justify-between items-start">
                            <div>
-                              <p className={`text-xs font-bold uppercase tracking-wider ${filter === 'PANCHKARMA' ? 'text-white/70' : 'text-gray-400'}`}>Panchkarma</p>
+                              <p className={`text-xs font-bold uppercase tracking-wider ${filter === 'PANCHKARMA' ? 'text-white/70' : 'text-gray-400'}`}>Procedure</p>
                               <h3 className="text-sm font-bold mt-2 opacity-80">Procedures</h3>
                            </div>
                            <div className={`p-2 rounded-lg ${filter === 'PANCHKARMA' ? 'bg-white/20' : 'bg-purple-50 text-purple-700'}`}><Sparkles size={24} /></div>
@@ -247,7 +247,7 @@ export default function ReportsPage() {
                         <div className="flex justify-between items-start mb-3">
                            <div>
                               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Weight Loss</p>
-                              <h3 className="text-2xl font-bold mt-1 text-[#1e3a29]">{data.summary.totalWeightLoss?.toFixed(1) || 0} <span className="text-sm font-normal text-gray-500">kg</span></h3>
+                              <h3 className="text-2xl font-bold mt-1 text-[#0f172a]">{data.summary.totalWeightLoss?.toFixed(1) || 0} <span className="text-sm font-normal text-gray-500">kg</span></h3>
                            </div>
                            <div className="p-2 bg-pink-50 text-pink-700 rounded-lg"><Scale size={24} /></div>
                         </div>
@@ -275,7 +275,7 @@ export default function ReportsPage() {
                   {/* Charts Row */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 print:break-inside-avoid">
                      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-80">
-                        <h3 className="font-bold text-[#1e3a29] mb-4">Revenue Overview (Daily Breakdown)</h3>
+                        <h3 className="font-bold text-[#0f172a] mb-4">Revenue Overview (Daily Breakdown)</h3>
                         {isRevenueVisible ? (
                            <ResponsiveContainer width="100%" height="100%">
                               <BarChart data={data.charts.revenueOverTime}>
@@ -287,9 +287,9 @@ export default function ReportsPage() {
                                     labelFormatter={(label) => new Date(label).toLocaleDateString('en-GB')}
                                  />
                                  <Legend />
-                                 <Bar dataKey="appointment" name="Appointments" stackId="a" fill="#c5a059" radius={[0, 0, 0, 0]} barSize={20} />
-                                 <Bar dataKey="pharmacy" name="Pharmacy" stackId="a" fill="#1e3a29" radius={[0, 0, 0, 0]} barSize={20} />
-                                 <Bar dataKey="panchkarma" name="Panchkarma" stackId="a" fill="#9333ea" radius={[4, 4, 0, 0]} barSize={20} />
+                                 <Bar dataKey="appointment" name="Appointments" stackId="a" fill="#0284c7" radius={[0, 0, 0, 0]} barSize={20} />
+                                 <Bar dataKey="pharmacy" name="Pharmacy" stackId="a" fill="#0f172a" radius={[0, 0, 0, 0]} barSize={20} />
+                                 <Bar dataKey="panchkarma" name="Procedure" stackId="a" fill="#9333ea" radius={[4, 4, 0, 0]} barSize={20} />
                               </BarChart>
                            </ResponsiveContainer>
                         ) : (
@@ -301,7 +301,7 @@ export default function ReportsPage() {
                      </div>
 
                      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-80">
-                        <h3 className="font-bold text-[#1e3a29] mb-4">Top 5 Selling Medicines</h3>
+                        <h3 className="font-bold text-[#0f172a] mb-4">Top 5 Selling Medicines</h3>
                         <ResponsiveContainer width="100%" height="100%">
                            <BarChart layout="vertical" data={data.charts.topMedicines} margin={{ left: 20 }}>
                               <CartesianGrid strokeDasharray="3 3" horizontal={false} />
@@ -317,14 +317,14 @@ export default function ReportsPage() {
                   {/* Transactions Table */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden print:shadow-none print:border">
                      <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
-                        <h3 className="font-bold text-[#1e3a29]">
-                           {filter === 'ALL' ? 'All Transactions' : filter === 'PHARMACY' ? 'Pharmacy Sales' : filter === 'PANCHKARMA' ? 'Panchkarma Procedures' : 'Appointment History'}
+                        <h3 className="font-bold text-[#0f172a]">
+                           {filter === 'ALL' ? 'All Transactions' : filter === 'PHARMACY' ? 'Pharmacy Sales' : filter === 'PANCHKARMA' ? 'Therapies & Procedures' : 'Appointment History'}
                         </h3>
                         <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{filteredTransactions.length} records</span>
                      </div>
                      <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
-                           <thead className="bg-[#1e3a29] text-white text-xs uppercase">
+                           <thead className="bg-[#0f172a] text-white text-xs uppercase">
                               <tr>
                                  <th className="p-3">Date</th>
                                  <th className="p-3">Type</th>
@@ -349,9 +349,9 @@ export default function ReportsPage() {
                                     <td className="p-3 font-mono text-xs text-gray-600">
                                        {item.appointmentId}
                                     </td>
-                                    <td className="p-3 font-medium text-[#1e3a29]">{item.patient}</td>
+                                    <td className="p-3 font-medium text-[#0f172a]">{item.patient}</td>
                                     <td className="p-3 text-gray-600">{item.detail}</td>
-                                    <td className="p-3 text-right font-bold text-[#1e3a29]">
+                                    <td className="p-3 text-right font-bold text-[#0f172a]">
                                        {isRevenueVisible ? `₹ ${item.amount}` : '****'}
                                     </td>
                                  </tr>
@@ -371,7 +371,7 @@ export default function ReportsPage() {
             {showWeightLossModal && data && (
                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
                   <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col animate-in zoom-in-95">
-                     <div className="bg-[#1e3a29] p-4 flex justify-between items-center text-white rounded-t-xl shrink-0">
+                     <div className="bg-[#0f172a] p-4 flex justify-between items-center text-white rounded-t-xl shrink-0">
                         <h3 className="font-bold text-lg flex items-center gap-2">
                            <Scale size={20} /> Weight Loss Achievers
                         </h3>
@@ -392,7 +392,7 @@ export default function ReportsPage() {
                                  {data.weightLossPatients.map((p: any) => (
                                     <tr key={p.id}>
                                        <td className="p-3">
-                                          <div className="font-bold text-[#1e3a29]">{p.name}</div>
+                                          <div className="font-bold text-[#0f172a]">{p.name}</div>
                                           <div className="text-xs text-gray-500">{p.readableId}</div>
                                        </td>
                                        <td className="p-3 text-center text-gray-600">{p.initial}</td>
@@ -407,7 +407,7 @@ export default function ReportsPage() {
                         )}
                      </div>
                      <div className="p-4 border-t text-center text-xs text-gray-500">
-                        Total Weight Lost: <span className="font-bold text-[#1e3a29]">{data.summary.totalWeightLoss?.toFixed(1)} kg</span>
+                        Total Weight Lost: <span className="font-bold text-[#0f172a]">{data.summary.totalWeightLoss?.toFixed(1)} kg</span>
                      </div>
                   </div>
                </div>

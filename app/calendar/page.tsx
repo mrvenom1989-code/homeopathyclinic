@@ -201,11 +201,11 @@ function WeeklyCalendar() {
       return 'bg-purple-50 border-purple-600 text-purple-900';
     }
 
-    if (apt.type.includes('Panchkarma')) {
-      return 'bg-[#c5a059]/20 border-[#c5a059] text-[#7d5f2a]';
+    if (apt.type.includes('Panchkarma') || apt.type.includes('Procedure')) {
+      return 'bg-[#0284c7]/20 border-[#0284c7] text-[#7d5f2a]';
     }
 
-    return 'bg-[#1e3a29]/10 border-[#1e3a29] text-[#1e3a29]';
+    return 'bg-[#0f172a]/10 border-[#0f172a] text-[#0f172a]';
   };
 
   const getProcessedStyles = (apt: AppointmentWithLanes, dayAppointments: AppointmentWithLanes[]) => {
@@ -239,18 +239,18 @@ function WeeklyCalendar() {
     <div className="flex flex-col h-full">
       <header className="bg-white border-b px-6 py-4 flex justify-between items-center shrink-0 z-20 shadow-sm">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-[#1e3a29] flex items-center gap-2">
-            Weekly Schedule {isLoading && <Loader2 className="animate-spin text-[#c5a059]" size={20} />}
+          <h1 className="text-2xl font-serif font-bold text-[#0f172a] flex items-center gap-2">
+            Weekly Schedule {isLoading && <Loader2 className="animate-spin text-[#0284c7]" size={20} />}
           </h1>
           <p className="text-sm text-gray-500">{isLoading ? "Loading..." : `Managing ${appointments.length} entries`}</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center bg-white border rounded-lg">
             <button onClick={() => setCurrentDate(addDays(currentDate, -7))} className="p-2 hover:bg-gray-100"><ChevronLeft size={20} /></button>
-            <span className="px-4 font-medium text-[#1e3a29] w-32 text-center">{format(startDate, "MMM d")} - {format(addDays(startDate, 6), "MMM d")}</span>
+            <span className="px-4 font-medium text-[#0f172a] w-32 text-center">{format(startDate, "MMM d")} - {format(addDays(startDate, 6), "MMM d")}</span>
             <button onClick={() => setCurrentDate(addDays(currentDate, 7))} className="p-2 hover:bg-gray-100"><ChevronRight size={20} /></button>
           </div>
-          <button onClick={() => setCurrentDate(new Date())} className="bg-[#1e3a29] text-white px-4 py-2 rounded-lg text-sm">Today</button>
+          <button onClick={() => setCurrentDate(new Date())} className="bg-[#0f172a] text-white px-4 py-2 rounded-lg text-sm">Today</button>
         </div>
       </header>
 
@@ -284,10 +284,10 @@ function WeeklyCalendar() {
 
             return (
               <div key={day.toString()} className="flex-1 border-r min-w-[140px] bg-white relative group/col overflow-hidden">
-                <div className={`h-12 border-b flex justify-between items-center px-2 sticky top-0 z-10 bg-white ${isToday ? 'bg-[#c5a059]/10' : ''}`}>
+                <div className={`h-12 border-b flex justify-between items-center px-2 sticky top-0 z-10 bg-white ${isToday ? 'bg-[#0284c7]/10' : ''}`}>
                   <div className="flex flex-col">
                     <span className="text-[10px] uppercase font-bold text-gray-400">{format(day, "EEE")}</span>
-                    <span className={`text-sm font-serif font-bold ${isToday ? 'text-[#c5a059]' : 'text-[#1e3a29]'}`}>{format(day, "d")}</span>
+                    <span className={`text-sm font-serif font-bold ${isToday ? 'text-[#0284c7]' : 'text-[#0f172a]'}`}>{format(day, "d")}</span>
                   </div>
                   <button onClick={() => blockWholeDay(day)} title="Block Whole Day" className="text-gray-300 hover:text-red-500 opacity-0 group-hover/col:opacity-100 transition p-1"><Ban size={16} /></button>
                 </div>
@@ -338,7 +338,7 @@ function WeeklyCalendar() {
                           {parseInt(getProcessedStyles(apt, appointmentsWithLanes).height as string) > 35 && (
                             <>
                               <div className="opacity-80 truncate text-[9px] mt-0.5">{apt.startTime} - {apt.endTime}</div>
-                              <div className={`inline-block px-1 rounded-sm mt-0.5 text-[8px] font-bold uppercase tracking-wider ${apt.type.includes('Panchkarma') ? 'bg-[#c5a059] text-white' : 'bg-black/5'}`}>
+                              <div className={`inline-block px-1 rounded-sm mt-0.5 text-[8px] font-bold uppercase tracking-wider ${(apt.type.includes('Panchkarma') || apt.type.includes('Procedure')) ? 'bg-[#0284c7] text-white' : 'bg-black/5'}`}>
                                 {apt.type}
                               </div>
                             </>
@@ -372,7 +372,7 @@ export default function CalendarPage() {
     <div className="h-screen bg-[#FDFBF7] flex flex-col font-sans text-neutral-800">
       <StaffHeader />
       <div className="flex-1 overflow-hidden">
-        <Suspense fallback={<div className="h-full flex items-center justify-center"><Loader2 className="animate-spin text-[#c5a059]" size={40} /></div>}>
+        <Suspense fallback={<div className="h-full flex items-center justify-center"><Loader2 className="animate-spin text-[#0284c7]" size={40} /></div>}>
           <WeeklyCalendar />
         </Suspense>
       </div>

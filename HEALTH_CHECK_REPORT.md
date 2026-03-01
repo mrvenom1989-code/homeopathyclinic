@@ -1,6 +1,6 @@
-# Health Check Report for rudra-ayurved
+# Health Check Report for clinic-management-system
 
-This report summarizes the health check of the `rudra-ayurved` application. While the application is functional, several areas require attention to improve security, maintainability, and performance.
+This report summarizes the health check of the `clinic-management-system` application. While the application is functional, several areas require attention to improve security, maintainability, and performance.
 
 ## Summary of Findings and Recommendations
 

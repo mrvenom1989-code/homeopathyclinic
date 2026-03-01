@@ -110,7 +110,7 @@ export default function Dashboard() {
     const dateStr = dateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 
     // 3. Construct Message
-    const message = `Namaste ${apt.patientName}, this is a reminder for your appointment at Rudra Ayurved with ${apt.doctor} on ${dateStr} at ${apt.startTime}. Please reply to confirm.`;
+    const message = `Namaste ${apt.patientName}, this is a reminder for your appointment at the clinic with ${apt.doctor} on ${dateStr} at ${apt.startTime}. Please reply to confirm.`;
 
     // 4. Open WhatsApp & Mark as Sent locally
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
@@ -166,7 +166,7 @@ export default function Dashboard() {
 
   if (loading) return (
     <div className="h-screen flex items-center justify-center bg-[#FDFBF7]">
-      <Loader2 className="animate-spin text-[#c5a059]" size={48} />
+      <Loader2 className="animate-spin text-[#0284c7]" size={48} />
     </div>
   );
 
@@ -180,19 +180,19 @@ export default function Dashboard() {
         {/* DASHBOARD HEADER */}
         <header className="flex justify-between items-end mb-8">
           <div>
-            <h1 className="text-4xl font-serif font-bold text-[#1e3a29] mb-2">
+            <h1 className="text-4xl font-serif font-bold text-[#0f172a] mb-2">
               Namaste, {stats?.userName || "Doctor"}
             </h1>
             <p className="text-gray-500">Here is your clinic overview.</p>
           </div>
           <div className="text-right flex flex-col items-end gap-2">
-            <p className="text-sm font-bold text-[#c5a059] uppercase tracking-wider">
+            <p className="text-sm font-bold text-[#0284c7] uppercase tracking-wider">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' })}
             </p>
             <button
               onClick={() => loadData()}
               disabled={refreshing}
-              className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-[#1e3a29] transition disabled:opacity-50"
+              className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-[#0f172a] transition disabled:opacity-50"
             >
               <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
               {refreshing ? "Updating..." : "Refresh Data"}
@@ -203,30 +203,30 @@ export default function Dashboard() {
         {/* 1. CLICKABLE STATS ROW */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
-          <Link href="/calendar" className="group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md hover:border-[#c5a059] transition">
+          <Link href="/calendar" className="group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md hover:border-[#0284c7] transition">
             <div>
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Appointments Today</p>
-              <h2 className="text-4xl font-serif font-bold text-[#1e3a29]">{stats?.appointments || 0}</h2>
+              <h2 className="text-4xl font-serif font-bold text-[#0f172a]">{stats?.appointments || 0}</h2>
             </div>
             <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition">
               <Calendar size={24} />
             </div>
           </Link>
 
-          <Link href="/pharmacy" className="group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md hover:border-[#c5a059] transition">
+          <Link href="/pharmacy" className="group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md hover:border-[#0284c7] transition">
             <div>
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Pending Prescriptions</p>
-              <h2 className="text-4xl font-serif font-bold text-[#1e3a29]">{stats?.queue || 0}</h2>
+              <h2 className="text-4xl font-serif font-bold text-[#0f172a]">{stats?.queue || 0}</h2>
             </div>
             <div className={`w-12 h-12 rounded-full flex items-center justify-center group-hover:scale-110 transition ${stats?.queue && stats.queue > 0 ? 'bg-orange-50 text-orange-600 animate-pulse' : 'bg-green-50 text-green-600'}`}>
               <Clock size={24} />
             </div>
           </Link>
 
-          <Link href="/pharmacy?tab=inventory" className="group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md hover:border-[#c5a059] transition">
+          <Link href="/pharmacy?tab=inventory" className="group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md hover:border-[#0284c7] transition">
             <div>
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Low Stock Alerts</p>
-              <h2 className={`text-4xl font-serif font-bold ${stats?.lowStock && stats.lowStock > 0 ? 'text-red-600' : 'text-[#1e3a29]'}`}>
+              <h2 className={`text-4xl font-serif font-bold ${stats?.lowStock && stats.lowStock > 0 ? 'text-red-600' : 'text-[#0f172a]'}`}>
                 {stats?.lowStock || 0}
               </h2>
             </div>
@@ -239,20 +239,20 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
 
           {/* SECTION 2: WEB REQUESTS */}
-          <div className="bg-white rounded-xl shadow-sm border border-[#c5a059]/30 overflow-hidden h-full">
-            <div className="bg-[#fff9f0] px-6 py-4 border-b border-[#c5a059]/10 flex justify-between items-center">
-              <h3 className="font-serif font-bold text-[#1e3a29] flex items-center gap-2">
+          <div className="bg-white rounded-xl shadow-sm border border-[#0284c7]/30 overflow-hidden h-full">
+            <div className="bg-[#fff9f0] px-6 py-4 border-b border-[#0284c7]/10 flex justify-between items-center">
+              <h3 className="font-serif font-bold text-[#0f172a] flex items-center gap-2">
                 {stats?.requests && stats.requests.length > 0 && <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>}
                 Website Requests
               </h3>
-              <span className="text-xs font-bold text-[#c5a059] uppercase">{stats?.requests?.length || 0} Pending</span>
+              <span className="text-xs font-bold text-[#0284c7] uppercase">{stats?.requests?.length || 0} Pending</span>
             </div>
 
             <div className="divide-y divide-gray-100 max-h-[300px] overflow-y-auto">
               {stats?.requests?.map((req) => (
                 <div key={req.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition">
                   <div>
-                    <p className="font-bold text-[#1e3a29]">{req.name}</p>
+                    <p className="font-bold text-[#0f172a]">{req.name}</p>
                     <p className="text-xs text-gray-500">📞 {req.phone}</p>
                     <div className="mt-1 bg-orange-50 text-orange-800 text-xs px-2 py-1 rounded inline-block font-medium">
                       Note: {req.symptoms || "Consultation Request"}
@@ -264,7 +264,7 @@ export default function Dashboard() {
                     </button>
                     <Link
                       href={`/calendar?reqId=${req.id}&name=${encodeURIComponent(req.name)}&phone=${req.phone}`}
-                      className="text-xs bg-[#1e3a29] text-white px-4 py-2 rounded-lg hover:bg-[#2a4d38] font-bold shadow-sm flex items-center gap-2"
+                      className="text-xs bg-[#0f172a] text-white px-4 py-2 rounded-lg hover:bg-[#2a4d38] font-bold shadow-sm flex items-center gap-2"
                     >
                       <Calendar size={14} /> Book Slot
                     </Link>
@@ -282,14 +282,14 @@ export default function Dashboard() {
           {/* SECTION 3: UPCOMING SCHEDULE */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden h-full flex flex-col">
             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-              <h3 className="font-serif font-bold text-[#1e3a29] flex items-center gap-2">
-                <Users className="text-[#c5a059]" size={20} /> Upcoming Schedule
+              <h3 className="font-serif font-bold text-[#0f172a] flex items-center gap-2">
+                <Users className="text-[#0284c7]" size={20} /> Upcoming Schedule
               </h3>
 
               {/* BULK REMINDER BUTTON */}
               <button
                 onClick={() => setIsBulkReminderModalOpen(true)}
-                className="text-xs bg-[#1e3a29] text-white px-3 py-1.5 rounded-full hover:bg-[#2a4d38] flex items-center gap-1.5 transition shadow-sm"
+                className="text-xs bg-[#0f172a] text-white px-3 py-1.5 rounded-full hover:bg-[#2a4d38] flex items-center gap-1.5 transition shadow-sm"
               >
                 <ListChecks size={14} /> Bulk Reminders
               </button>
@@ -315,7 +315,7 @@ export default function Dashboard() {
                       return (
                         <tr key={apt.id} className="hover:bg-gray-50 transition">
                           <td className="p-3">
-                            <div className="font-bold text-[#1e3a29]">{apt.startTime}</div>
+                            <div className="font-bold text-[#0f172a]">{apt.startTime}</div>
                             <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${isToday ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                               {isToday ? 'TODAY' : 'TMROW'}
                             </span>
@@ -360,7 +360,7 @@ export default function Dashboard() {
         <div className="mt-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-              <h3 className="font-serif font-bold text-[#1e3a29] flex items-center gap-2">
+              <h3 className="font-serif font-bold text-[#0f172a] flex items-center gap-2">
                 <CheckCircle className="text-green-600" size={18} /> Completed Today
               </h3>
               <span className="text-xs font-bold text-gray-400">Recent 5</span>
@@ -377,7 +377,7 @@ export default function Dashboard() {
                         {apt.patientName.charAt(0)}
                       </div>
                       <div>
-                        <p className="font-bold text-[#1e3a29] text-sm group-hover:text-[#c5a059] transition">{apt.patientName}</p>
+                        <p className="font-bold text-[#0f172a] text-sm group-hover:text-[#0284c7] transition">{apt.patientName}</p>
                         <p className="text-xs text-gray-500">{apt.type} • {apt.doctor}</p>
                       </div>
                     </div>
@@ -385,7 +385,7 @@ export default function Dashboard() {
                       <span className="text-xs text-gray-400">
                         {new Date(apt.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
-                      <ChevronRight size={16} className="text-gray-300 group-hover:text-[#c5a059]" />
+                      <ChevronRight size={16} className="text-gray-300 group-hover:text-[#0284c7]" />
                     </div>
                   </Link>
                 ))
@@ -400,22 +400,22 @@ export default function Dashboard() {
       {isCompleteModalOpen && selectedApt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95">
-            <div className="bg-[#1e3a29] p-4 text-white flex justify-between items-center">
+            <div className="bg-[#0f172a] p-4 text-white flex justify-between items-center">
               <h3 className="font-bold">Complete Appointment</h3>
               <button onClick={() => setIsCompleteModalOpen(false)}><X size={20} /></button>
             </div>
             <div className="p-6">
               <p className="text-sm text-gray-600 mb-4">
-                Marking appointment for <span className="font-bold text-[#1e3a29]">{selectedApt.patientName}</span> as completed.
+                Marking appointment for <span className="font-bold text-[#0f172a]">{selectedApt.patientName}</span> as completed.
               </p>
 
               <div className="mb-4">
                 <label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Apply Discount (₹)</label>
-                <div className="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-[#c5a059]">
+                <div className="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-[#0284c7]">
                   <BadgePercent size={16} className="text-gray-400 mr-2" />
                   <input
                     type="number"
-                    className="w-full text-sm outline-none font-bold text-[#1e3a29]"
+                    className="w-full text-sm outline-none font-bold text-[#0f172a]"
                     placeholder="0"
                     value={apptDiscount}
                     onChange={(e) => setApptDiscount(e.target.value)}
@@ -428,7 +428,7 @@ export default function Dashboard() {
 
               <button
                 onClick={handleConfirmCompletion}
-                className="w-full bg-[#1e3a29] text-white py-3 rounded-lg font-bold text-sm hover:bg-[#162b1e] transition shadow-md flex justify-center items-center gap-2"
+                className="w-full bg-[#0f172a] text-white py-3 rounded-lg font-bold text-sm hover:bg-[#020617] transition shadow-md flex justify-center items-center gap-2"
               >
                 <CheckCircle size={16} /> Confirm Completion
               </button>
@@ -441,7 +441,7 @@ export default function Dashboard() {
       {isBulkReminderModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[80vh]">
-            <div className="bg-[#1e3a29] p-4 text-white flex justify-between items-center shrink-0">
+            <div className="bg-[#0f172a] p-4 text-white flex justify-between items-center shrink-0">
               <div>
                 <h3 className="font-bold flex items-center gap-2"><ListChecks size={20} /> Bulk Reminders</h3>
                 <p className="text-[10px] text-gray-300">Showing appointments for Today & Tomorrow</p>
@@ -470,7 +470,7 @@ export default function Dashboard() {
                       return (
                         <tr key={apt.id} className={isSent ? "bg-green-50" : "hover:bg-gray-50"}>
                           <td className="p-3">
-                            <div className="font-bold text-[#1e3a29]">{apt.startTime}</div>
+                            <div className="font-bold text-[#0f172a]">{apt.startTime}</div>
                             {isToday && <span className="text-[9px] bg-green-100 text-green-700 px-1 rounded font-bold">TODAY</span>}
                           </td>
                           <td className="p-3 font-medium">{apt.patientName}</td>
@@ -480,8 +480,8 @@ export default function Dashboard() {
                               onClick={() => handleWhatsAppReminder(apt)}
                               disabled={isSent}
                               className={`text-xs px-3 py-1.5 rounded-full font-bold flex items-center gap-1 ml-auto transition ${isSent
-                                  ? "bg-green-200 text-green-800 cursor-not-allowed"
-                                  : "bg-[#25D366] text-white hover:bg-[#1ebc57]"
+                                ? "bg-green-200 text-green-800 cursor-not-allowed"
+                                : "bg-[#25D366] text-white hover:bg-[#1ebc57]"
                                 }`}
                             >
                               {isSent ? <CheckCircle size={12} /> : <MessageCircle size={12} />}

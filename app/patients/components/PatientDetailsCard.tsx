@@ -21,9 +21,9 @@ export default function PatientDetailsCard({
 
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="bg-[#1e3a29] p-4 flex justify-between items-center">
+            <div className="bg-[#0f172a] p-4 flex justify-between items-center">
                 <h3 className="text-white font-bold flex items-center gap-2"><User size={18} /> Personal Details</h3>
-                <button onClick={() => isEditingDetails ? handleSaveDetails() : setIsEditingDetails(true)} disabled={savingDetails} className="bg-[#c5a059] text-[#1e3a29] px-3 py-1 rounded text-xs font-bold disabled:opacity-50">
+                <button onClick={() => isEditingDetails ? handleSaveDetails() : setIsEditingDetails(true)} disabled={savingDetails} className="bg-[#0284c7] text-[#0f172a] px-3 py-1 rounded text-xs font-bold disabled:opacity-50">
                     {savingDetails ? "Saving..." : (isEditingDetails ? "Save" : "Edit")}
                 </button>
             </div>
@@ -37,9 +37,9 @@ export default function PatientDetailsCard({
                 <div><label className="text-xs font-bold text-gray-400 uppercase">History / Allergies</label>{isEditingDetails ? <textarea className="w-full border p-1 text-sm rounded" rows={2} value={patient.history || ""} onChange={e => setPatient({ ...patient, history: e.target.value })} /> : <p className="text-sm italic text-gray-600">{patient.history || "-"}</p>}</div>
                 <div className="grid grid-cols-2 gap-4 pt-2 border-t border-dashed">
                     <div><label className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-1"><Scale size={10} /> Weight</label>{isEditingDetails ? <div className="flex gap-1"><input placeholder="Cur" className="w-10 border-b text-sm" value={patient.currentWeight || ""} onChange={e => setPatient({ ...patient, currentWeight: e.target.value })} /><span className="text-gray-400">/</span><input placeholder="Init" className="w-10 border-b text-sm" value={patient.initialWeight || ""} onChange={e => setPatient({ ...patient, initialWeight: e.target.value })} /></div> : <p className="text-sm font-bold text-gray-700">{patient.currentWeight || "-"} / {patient.initialWeight || "-"}</p>}</div>
-                    <div><label className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-1"><Leaf size={10} /> Prakriti</label>{isEditingDetails ? <input className="w-full border-b text-sm" value={patient.prakriti || ""} onChange={e => setPatient({ ...patient, prakriti: e.target.value })} /> : <p className="text-sm font-bold text-purple-700">{patient.prakriti || "-"}</p>}</div>
+                    <div><label className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-1">Height</label>{isEditingDetails ? <input className="w-full border-b text-sm" value={patient.height || ""} onChange={e => setPatient({ ...patient, height: e.target.value })} /> : <p className="text-sm font-bold text-purple-700">{patient.height || "-"}</p>}</div>
                 </div>
-                <button onClick={() => setShowExtendedDetails(!showExtendedDetails)} className="text-xs font-bold text-[#c5a059] flex items-center gap-1 w-full justify-center border-t border-b py-2">{showExtendedDetails ? <><ChevronUp size={14} /> Show Less</> : <><ChevronDown size={14} /> Show Medical History</>}</button>
+                <button onClick={() => setShowExtendedDetails(!showExtendedDetails)} className="text-xs font-bold text-[#0284c7] flex items-center gap-1 w-full justify-center border-t border-b py-2">{showExtendedDetails ? <><ChevronUp size={14} /> Show Less</> : <><ChevronDown size={14} /> Show Medical History</>}</button>
                 {showExtendedDetails && (
                     <div className="space-y-4 pt-2 animate-in slide-in-from-top-2">
                         <div><label className="text-xs font-bold text-gray-400 uppercase">Chief Complaints</label>{isEditingDetails ? <textarea className="w-full border p-1 text-sm rounded" rows={2} value={(patient as any).chiefComplaints || ""} onChange={e => setPatient({ ...patient, chiefComplaints: e.target.value })} /> : <p className="text-sm whitespace-pre-wrap">{(patient as any).chiefComplaints || "-"}</p>}</div>

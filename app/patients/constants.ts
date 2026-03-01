@@ -1,11 +1,10 @@
 export const DOSAGE_OPTIONS = [
+    "SOS", "1 Dose", "2 Doses", "3 Doses",
     "1-0-0", "0-1-0", "0-0-1", "1-0-1", "1-1-0", "0-1-1", "1-1-1",
-    "2-0-0", "0-2-0", "0-0-2", "2-0-2", "2-2-0", "0-2-2", "2-2-2",
-    "3-0-0", "0-3-0", "0-0-3", "3-0-3", "3-3-0", "0-3-3", "3-3-3",
-    "4-0-0", "0-4-0", "0-0-4", "4-0-4", "4-4-0", "0-4-4", "4-4-4",
-    "SOS"
+    "2-0-0", "0-2-0", "0-0-2", "2-0-2", "2-2-0", "0-2-2", "2-2-2"
 ];
-export const UNIT_OPTIONS = ["Tablet", "Capsule", "Spoon (tsp)", "Drop", "Sachet", "Pouch", "Ointment", "Powder"];
+export const VEHICLE_OPTIONS = ["Pills", "Globules", "Distilled Water", "Sugar of Milk", "Tablet", "Ointment", "Drop"];
+export const POTENCY_OPTIONS = ["Q (Mother Tincture)", "3x", "6x", "6c", "30c", "200c", "1M", "10M", "50M", "CM"];
 export const INSTRUCTION_OPTIONS = ["After Food", "Before Food", "Empty Stomach", "Before Sleep"];
 export const WITH_OPTIONS = ["Regular Water", "Warm Water", "Milk", "Honey", "Ghee", "External Application"];
 

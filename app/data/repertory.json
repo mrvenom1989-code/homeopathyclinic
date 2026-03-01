@@ -1,0 +1,108 @@
+[
+    {
+        "chapter": "Mind",
+        "rubrics": [
+            "Anxiety",
+            "Fear",
+            "Anger",
+            "Sadness",
+            "Forgetful",
+            "Irritability",
+            "Restless",
+            "Ailments from Grief"
+        ]
+    },
+    {
+        "chapter": "Head",
+        "rubrics": [
+            "Pain, general",
+            "Pain, bursting",
+            "Pain, pressing",
+            "Heaviness",
+            "Vertigo",
+            "Dandruff",
+            "Hair falling"
+        ]
+    },
+    {
+        "chapter": "Eye",
+        "rubrics": [
+            "Inflammation",
+            "Pain",
+            "Photophobia",
+            "Discharge",
+            "Redness",
+            "Itching"
+        ]
+    },
+    {
+        "chapter": "Ear",
+        "rubrics": [
+            "Pain",
+            "Discharge",
+            "Noisesin",
+            "Hearing impaired",
+            "Itching"
+        ]
+    },
+    {
+        "chapter": "Nose",
+        "rubrics": [
+            "Coryza",
+            "Obstruction",
+            "Sneezing",
+            "Bleeding",
+            "Smell wanting"
+        ]
+    },
+    {
+        "chapter": "Stomach",
+        "rubrics": [
+            "Appetite increased",
+            "Appetite wanting",
+            "Thirst extreme",
+            "Thirstless",
+            "Nausea",
+            "Vomiting",
+            "Pain"
+        ]
+    },
+    {
+        "chapter": "Abdomen",
+        "rubrics": [
+            "Pain",
+            "Distension",
+            "Flatulence",
+            "Rumbling"
+        ]
+    },
+    {
+        "chapter": "Rectum",
+        "rubrics": [
+            "Constipation",
+            "Diarrhea",
+            "Hemorrhoids",
+            "Bleeding",
+            "Itching"
+        ]
+    },
+    {
+        "chapter": "Sleep",
+        "rubrics": [
+            "Sleeplessness",
+            "Sleepiness",
+            "Dreams frightful",
+            "Restless"
+        ]
+    },
+    {
+        "chapter": "Skin",
+        "rubrics": [
+            "Eruptions",
+            "Itching",
+            "Ulcers",
+            "Warts",
+            "Dryness"
+        ]
+    }
+]

@@ -24,14 +24,14 @@ const InventoryRow = memo(({ med, editingId, editForm, setEditForm, handleEdit, 
 
     return (
         <tr className="hover:bg-gray-50 group">
-            <td className="p-4 font-medium text-[#1e3a29]">
+            <td className="p-4 font-medium text-[#0f172a]">
                 {isEditing ? (
-                    <input className="w-full p-1 border rounded text-sm bg-white focus:ring-2 focus:ring-[#c5a059] outline-none" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} />
+                    <input className="w-full p-1 border rounded text-sm bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} />
                 ) : med.name}
             </td>
             <td className="p-4 text-gray-500">
                 {isEditing ? (
-                    <select className="w-full p-1 border rounded text-sm bg-white focus:ring-2 focus:ring-[#c5a059] outline-none" value={editForm.type} onChange={e => setEditForm({ ...editForm, type: e.target.value })}>
+                    <select className="w-full p-1 border rounded text-sm bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" value={editForm.type} onChange={e => setEditForm({ ...editForm, type: e.target.value })}>
                         {MEDICINE_TYPES.map(t => <option key={t}>{t}</option>)}
                     </select>
                 ) : med.type}
@@ -68,7 +68,7 @@ const InventoryRow = memo(({ med, editingId, editForm, setEditForm, handleEdit, 
                 {isEditing ? <input className="w-16 p-1 border rounded text-center bg-green-50" value={editForm.price} onChange={e => setEditForm({ ...editForm, price: e.target.value })} /> : <span>₹ {med.price}</span>}
             </td>
             <td className="p-4 text-right flex justify-end gap-3">
-                {isEditing ? <button onClick={() => saveEdit(med.id)} className="text-green-600 font-bold hover:underline">Save</button> : <><button onClick={() => handleEdit(med)} className="text-[#c5a059] font-bold hover:underline opacity-0 group-hover:opacity-100 transition">Edit</button><button onClick={() => handleDelete(med.id)} className="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition"><Trash2 size={16} /></button></>}
+                {isEditing ? <button onClick={() => saveEdit(med.id)} className="text-green-600 font-bold hover:underline">Save</button> : <><button onClick={() => handleEdit(med)} className="text-[#0284c7] font-bold hover:underline opacity-0 group-hover:opacity-100 transition">Edit</button><button onClick={() => handleDelete(med.id)} className="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition"><Trash2 size={16} /></button></>}
             </td>
         </tr>
     );

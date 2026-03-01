@@ -41,7 +41,7 @@ export const generateBill = async (data: BillData) => {
 
   // A. Logo (Top Left)
   try {
-    const logo = await loadImage("/rudralogo.png");
+    const logo = await loadImage("/logo-placeholder.png");
     // Add image: x, y, width, height
     doc.addImage(logo, "PNG", 10, 10, 25, 25);
   } catch {
@@ -52,12 +52,12 @@ export const generateBill = async (data: BillData) => {
   doc.setFontSize(24);
   doc.setTextColor(176, 155, 92); // Gold (#B09B5C)
   doc.setFont("times", "bold");
-  doc.text("RUDRA AYURVED", 105, 20, { align: "center" });
+  doc.text("CLINIC NAME", 105, 20, { align: "center" });
 
   doc.setFontSize(10);
-  doc.setTextColor(30, 58, 41); // Dark Green (#1e3a29)
+  doc.setTextColor(30, 58, 41); // Dark Green (#0f172a)
   doc.setFont("helvetica", "bold");
-  doc.text("Multi - Speciality Panchkarma Hospital", 105, 26, { align: "center" });
+  doc.text("Multi-Speciality Homeopathy Clinic", 105, 26, { align: "center" });
 
   // C. Slogan (Top Right)
   doc.setFontSize(9);
@@ -89,11 +89,11 @@ export const generateBill = async (data: BillData) => {
   doc.setFont("helvetica", "normal");
 
   // --- 3. ITEMS TABLE ---
-  
+
   const tableBody = data.items.map((item, index) => [
     index + 1,
     item.name,
-    item.dosage || "-", 
+    item.dosage || "-",
     item.qty,
     `Rs. ${item.amount}`
   ]);
@@ -105,7 +105,7 @@ export const generateBill = async (data: BillData) => {
   autoTable(doc, {
     startY: 70,
     // ✅ Updated Header to match Pharmacy UI
-    head: [['NO', 'PRODUCT', 'DOSAGE / INFO', 'QTY', 'AMOUNT']], 
+    head: [['NO', 'PRODUCT', 'DOSAGE / INFO', 'QTY', 'AMOUNT']],
     body: tableBody,
     theme: 'grid',
     headStyles: { fillColor: [30, 58, 41], textColor: 255 }, // Dark Green
@@ -114,7 +114,7 @@ export const generateBill = async (data: BillData) => {
       0: { cellWidth: 15, halign: 'center' }, // No
       1: { cellWidth: 'auto' },               // Product
       // ✅ Decreased font size for Dosage column to fit content better
-      2: { cellWidth: 45, halign: 'center', fontSize: 8 }, 
+      2: { cellWidth: 45, halign: 'center', fontSize: 8 },
       3: { cellWidth: 20, halign: 'center' }, // Qty
       4: { cellWidth: 30, halign: 'right' }   // Amount
     }
@@ -135,7 +135,7 @@ export const generateBill = async (data: BillData) => {
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(0, 0, 0);
-  doc.text("For Rudra Ayurved", 150, signatureY);
+  doc.text("For Clinic Name", 150, signatureY);
 
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
@@ -155,8 +155,8 @@ export const generateBill = async (data: BillData) => {
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(0, 0, 0);
-  doc.text("206, B- Block, 2nd Floor, Olive Greens, Gota, S.G. Highway, Ahmedabad - 382481", 105, pageHeight - 15, { align: "center" });
-  doc.text("www.rudraayurved.com  |  rudraayurved5@gmail.com", 105, pageHeight - 10, { align: "center" });
+  doc.text("123 Clinic Address, City - 123456", 105, pageHeight - 15, { align: "center" });
+  doc.text("www.clinicwebsite.com  |  contact@clinic.com", 105, pageHeight - 10, { align: "center" });
 
   // Save
   doc.save(`Bill_${data.patientName}_${data.billNo}.pdf`);

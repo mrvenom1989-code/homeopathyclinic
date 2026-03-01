@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // 3. Allow images from Unsplash
   images: {
     remotePatterns: [
       {
@@ -12,6 +11,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: ["@prisma/client"],
 };
 
 export default nextConfig;

@@ -260,12 +260,12 @@ export default function AppointmentModal({
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className={`rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200 ${type === 'Unavailable' ? 'bg-gray-50' : 'bg-white'}`}>
 
-        <div className={`p-4 flex justify-between items-center text-white ${type === 'Unavailable' ? 'bg-gray-600' : 'bg-[#1e3a29]'}`}>
+        <div className={`p-4 flex justify-between items-center text-white ${type === 'Unavailable' ? 'bg-gray-600' : 'bg-[#0f172a]'}`}>
           <h3 className="font-serif text-xl font-bold flex items-center gap-2">
             {type === 'Unavailable' && <Ban size={20} />}
             {existingAppointment ? "Edit Details" : "New Entry"}
           </h3>
-          <button onClick={onClose} className="hover:text-[#c5a059] transition"><X size={24} /></button>
+          <button onClick={onClose} className="hover:text-[#0284c7] transition"><X size={24} /></button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
@@ -273,13 +273,13 @@ export default function AppointmentModal({
           <div>
             <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Entry Type</label>
             <div className="grid grid-cols-2 gap-2">
-              {['Consultation', 'Panchkarma-1', 'Panchkarma-2', 'Panchkarma-3', 'Unavailable'].map((t) => (
+              {['Consultation', 'Procedure-1', 'Procedure-2', 'Procedure-3', 'Unavailable'].map((t) => (
                 <button
                   key={t}
                   type="button"
                   onClick={() => setType(t)}
                   className={`py-2 text-xs font-medium rounded-md border transition ${type === t
-                    ? (t === 'Unavailable' ? 'bg-gray-600 text-white border-gray-600' : 'bg-[#1e3a29] text-white border-[#1e3a29]')
+                    ? (t === 'Unavailable' ? 'bg-gray-600 text-white border-gray-600' : 'bg-[#0f172a] text-white border-[#0f172a]')
                     : 'bg-white text-gray-600 hover:bg-gray-50 border-gray-200'
                     }`}
                 >
@@ -318,10 +318,10 @@ export default function AppointmentModal({
                   id="repeat"
                   checked={isRecurring}
                   onChange={(e) => setIsRecurring(e.target.checked)}
-                  className="w-4 h-4 text-[#c5a059] focus:ring-[#c5a059] border-gray-300 rounded cursor-pointer"
+                  className="w-4 h-4 text-[#0284c7] focus:ring-[#0284c7] border-gray-300 rounded cursor-pointer"
                 />
                 <label htmlFor="repeat" className="text-sm font-bold text-gray-700 flex items-center gap-2 cursor-pointer select-none">
-                  <Repeat size={14} className="text-[#c5a059]" /> Repeat Appointment
+                  <Repeat size={14} className="text-[#0284c7]" /> Repeat Appointment
                 </label>
               </div>
 
@@ -384,12 +384,12 @@ export default function AppointmentModal({
                     type="text"
                     required
                     placeholder="Search or Enter Full Name"
-                    className="w-full p-2 pl-9 border rounded text-sm focus:border-[#c5a059] outline-none"
+                    className="w-full p-2 pl-9 border rounded text-sm focus:border-[#0284c7] outline-none"
                     value={patientName}
                     onChange={handleNameChange}
                     onFocus={() => { if (patientName.length > 1) setShowResults(true) }}
                   />
-                  {isSearching && <Loader2 className="absolute right-3 top-2.5 animate-spin text-[#c5a059]" size={16} />}
+                  {isSearching && <Loader2 className="absolute right-3 top-2.5 animate-spin text-[#0284c7]" size={16} />}
                 </div>
 
                 {showResults && searchResults.length > 0 && (
@@ -402,11 +402,11 @@ export default function AppointmentModal({
                         className="w-full text-left px-3 py-2 text-sm hover:bg-green-50 border-b last:border-0 flex justify-between items-center group"
                       >
                         <div>
-                          <span className="font-bold text-[#1e3a29] block">{p.name}</span>
+                          <span className="font-bold text-[#0f172a] block">{p.name}</span>
                           <span className="text-xs text-gray-500">{p.phone}</span>
                         </div>
                         {p.readableId && (
-                          <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded group-hover:bg-[#c5a059] group-hover:text-white transition">
+                          <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded group-hover:bg-[#0284c7] group-hover:text-white transition">
                             {p.readableId}
                           </span>
                         )}
@@ -459,7 +459,7 @@ export default function AppointmentModal({
               </button>
             )}
 
-            <button type="submit" className={`flex-[2] text-white font-bold py-2 rounded text-sm shadow-md ${type === 'Unavailable' ? 'bg-gray-600 hover:bg-gray-700' : 'bg-[#c5a059] hover:bg-[#b08d4b] text-[#1e3a29]'}`}>
+            <button type="submit" className={`flex-[2] text-white font-bold py-2 rounded text-sm shadow-md ${type === 'Unavailable' ? 'bg-gray-600 hover:bg-gray-700' : 'bg-[#0284c7] hover:bg-[#0369a1] text-[#0f172a]'}`}>
               {existingAppointment ? "Update" : (type === 'Unavailable' ? "Block Time" : "Confirm")}
             </button>
           </div>

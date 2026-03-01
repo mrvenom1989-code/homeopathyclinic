@@ -23,13 +23,14 @@ import {
 } from "@/app/patients/actions";
 
 import {
-    DOSAGE_OPTIONS, UNIT_OPTIONS, INSTRUCTION_OPTIONS, WITH_OPTIONS,
+    DOSAGE_OPTIONS, VEHICLE_OPTIONS, POTENCY_OPTIONS, INSTRUCTION_OPTIONS, WITH_OPTIONS,
     REGULAR_DURATIONS, PANCHKARMA_DURATIONS, PHYSICAL_GENERALS_TEMPLATE
 } from "../constants";
 import { cleanName } from "../utils";
 import WalletModal from "../components/WalletModal";
 import PatientDetailsCard from "../components/PatientDetailsCard";
 import VisitHistoryList from "../components/VisitHistoryList";
+import repertoryData from "@/app/data/repertory.json";
 
 // Helper to format history
 const formatVisitHistory = (pData: any) => {
@@ -46,16 +47,23 @@ const formatVisitHistory = (pData: any) => {
         appointmentDiscount: c.appointment?.discount || 0,
         paidAmount: c.paidAmount || 0,
         paymentMode: c.paymentMode || "Cash",
+        bloodPressure: c.bloodPressure,
+        pulse: c.pulse,
+        temperature: c.temperature,
+        respiratoryRate: c.respiratoryRate,
+        miasms: c.miasms,
+        aggravationAmelioration: c.aggravationAmelioration,
+        repertoryRubrics: c.repertoryRubrics,
         prescriptions: c.prescriptions.flatMap((p: any) =>
             p.items.map((i: any) => ({
                 id: i.id,
                 medicineName: i.medicine.name,
                 medicineId: i.medicineId,
                 dosage: i.dosage,
-                unit: i.unit,
+                vehicle: i.unit,
+                potency: i.panchkarma,
                 duration: i.duration,
                 instruction: i.instruction,
-                panchkarma: i.panchkarma,
                 price: i.medicine.price
             }))
         )
@@ -104,6 +112,15 @@ export default function PatientProfileClient({
     const [visitNote, setVisitNote] = useState("");
     const [panchkarmaNote, setPanchkarmaNote] = useState("");
     const [isChargeable, setIsChargeable] = useState("YES");
+    const [bloodPressure, setBloodPressure] = useState("");
+    const [pulse, setPulse] = useState("");
+    const [temperature, setTemperature] = useState("");
+    const [respiratoryRate, setRespiratoryRate] = useState("");
+    const [miasms, setMiasms] = useState("");
+    const [aggravationAmelioration, setAggravationAmelioration] = useState("");
+    const [repertoryRubrics, setRepertoryRubrics] = useState<string[]>([]);
+    const [repSearch, setRepSearch] = useState("");
+    const [showRep, setShowRep] = useState(false);
 
     // Wallet Modal State
     const [showWalletModal, setShowWalletModal] = useState(false);
@@ -121,8 +138,9 @@ export default function PatientProfileClient({
     const [newMed, setNewMed] = useState({
         medicineId: "",
         medicineName: "",
+        potency: "30c",
         dosage: "1-0-1",
-        unit: "Tablet",
+        vehicle: "Pills",
         duration: "7 Days",
         instruction: "",
         with: "Regular Water"
@@ -214,7 +232,7 @@ export default function PatientProfileClient({
     };
 
     const selectMedicine = (med: any) => {
-        setNewMed({ ...newMed, medicineId: med.id, medicineName: med.name, unit: med.type || "Tablet" });
+        setNewMed({ ...newMed, medicineId: med.id, medicineName: med.name, vehicle: med.vehicle || "Pills", potency: med.potency || "30c" });
         setMedQuery(med.name);
         setShowMedList(false);
     };
@@ -231,7 +249,8 @@ export default function PatientProfileClient({
             instruction: combinedInstruction,
             medicineName: newMed.medicineName || medQuery,
             dosage: consultationType === 'REGULAR' ? newMed.dosage : "-",
-            unit: consultationType === 'REGULAR' ? newMed.unit : "-",
+            unit: consultationType === 'REGULAR' ? newMed.vehicle : "-",
+            panchkarma: consultationType === 'REGULAR' ? newMed.potency : "-",
             id: Date.now()
         };
 
@@ -261,8 +280,9 @@ export default function PatientProfileClient({
         setNewMed({
             medicineId: item.medicineId,
             medicineName: item.medicineName,
+            potency: item.potency || "30c",
             dosage: item.dosage,
-            unit: item.unit,
+            vehicle: item.vehicle || "Pills",
             duration: item.duration,
             instruction: instr,
             with: withVal
@@ -298,7 +318,14 @@ export default function PatientProfileClient({
             // Default to 0 so it registers as "Due" in wallet if not paid immediately
             discount: 0,
             paidAmount: 0,
-            paymentMode: "Cash"
+            paymentMode: "Cash",
+            bloodPressure,
+            pulse,
+            temperature,
+            respiratoryRate,
+            miasms,
+            aggravationAmelioration,
+            repertoryRubrics: JSON.stringify(repertoryRubrics)
         };
 
         const result = await savePrescription(patientId, visitData, editingVisitId || undefined);
@@ -328,13 +355,23 @@ export default function PatientProfileClient({
         setPanchkarmaNote(visit.notes || "");
         setSelectedAppointmentId(visit.appointmentId || null);
         setIsChargeable(visit.appointmentDiscount >= 500 ? "NO" : "YES");
+        setBloodPressure(visit.bloodPressure || "");
+        setPulse(visit.pulse || "");
+        setTemperature(visit.temperature || "");
+        setRespiratoryRate(visit.respiratoryRate || "");
+        setMiasms(visit.miasms || "");
+        setAggravationAmelioration(visit.aggravationAmelioration || "");
+        try {
+            setRepertoryRubrics(visit.repertoryRubrics ? JSON.parse(visit.repertoryRubrics) : []);
+        } catch (e) { setRepertoryRubrics([]); }
 
         const draftItems = visit.prescriptions.map((p: any) => ({
             id: Math.random(),
             medicineId: p.medicineId,
             medicineName: p.medicineName,
+            potency: p.panchkarma || "30c",
             dosage: p.dosage,
-            unit: p.unit || "Tablet",
+            vehicle: p.unit || "Pills",
             duration: p.duration,
             instruction: p.instruction,
         }));
@@ -347,6 +384,13 @@ export default function PatientProfileClient({
         setVisitNote("");
         setPanchkarmaNote("");
         setIsChargeable("YES");
+        setBloodPressure("");
+        setPulse("");
+        setTemperature("");
+        setRespiratoryRate("");
+        setMiasms("");
+        setAggravationAmelioration("");
+        setRepertoryRubrics([]);
         setSelectedAppointmentId(linkedAppointmentId || null);
         setCurrentPrescriptions([]);
     };
@@ -431,9 +475,9 @@ export default function PatientProfileClient({
                 {/* --- TOP BAR (SEARCH & WALLET) --- */}
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                     <div>
-                        <h2 className="text-2xl font-serif font-bold text-[#1e3a29]">Patient Profile</h2>
+                        <h2 className="text-2xl font-serif font-bold text-[#0f172a]">Patient Profile</h2>
                         <div className="flex gap-2 items-center mt-1">
-                            <p className="text-xs text-[#c5a059] font-bold uppercase tracking-widest bg-[#1e3a29]/5 px-2 py-1 rounded w-fit">
+                            <p className="text-xs text-[#0284c7] font-bold uppercase tracking-widest bg-[#0f172a]/5 px-2 py-1 rounded w-fit">
                                 ID: {patient.readableId}
                             </p>
                             {linkedAppointmentId && <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold">Linked: {linkedAppointmentId.slice(-4)}</span>}
@@ -465,7 +509,7 @@ export default function PatientProfileClient({
                                 <input
                                     type="text"
                                     placeholder="Search Patient..."
-                                    className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#c5a059]"
+                                    className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     onFocus={() => searchQuery.length > 1 && setShowPatientSearch(true)}
@@ -481,7 +525,7 @@ export default function PatientProfileClient({
                                 <div className="absolute top-full mt-2 left-0 w-full bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50">
                                     {patientSuggestions.map((p) => (
                                         <button key={p.id} onClick={() => selectPatient(p.id)} className="w-full text-left px-4 py-3 hover:bg-gray-50 border-b flex justify-between group">
-                                            <div><p className="font-bold text-sm text-[#1e3a29]">{cleanName(p.name)}</p><p className="text-xs text-gray-500">{p.phone}</p></div>
+                                            <div><p className="font-bold text-sm text-[#0f172a]">{cleanName(p.name)}</p><p className="text-xs text-gray-500">{p.phone}</p></div>
                                             <div className="text-right">
                                                 <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">{p.readableId}</span>
                                                 {p.walletBalance !== 0 && (
@@ -519,8 +563,8 @@ export default function PatientProfileClient({
 
                         <div className={`bg-white rounded-xl shadow-sm border p-6 relative ${editingVisitId ? 'border-amber-400 ring-1 ring-amber-400' : 'border-gray-100'}`}>
                             <div className="flex justify-between items-center mb-4">
-                                <h3 className="font-bold text-[#1e3a29] flex items-center gap-2">
-                                    <Stethoscope className="text-[#c5a059]" />
+                                <h3 className="font-bold text-[#0f172a] flex items-center gap-2">
+                                    <Stethoscope className="text-[#0284c7]" />
                                     {editingVisitId ? "Editing Past Consultation" : "New Consultation"}
                                 </h3>
                                 {editingVisitId && (
@@ -529,26 +573,83 @@ export default function PatientProfileClient({
                             </div>
 
                             <div className="flex gap-4 mb-4 p-1 bg-gray-50 rounded-lg w-fit">
-                                <button type="button" onClick={() => setConsultationType('REGULAR')} className={`px-4 py-2 text-xs font-bold rounded-md transition ${consultationType === 'REGULAR' ? 'bg-[#1e3a29] text-white shadow' : 'text-gray-500 hover:bg-gray-200'}`}>Regular Consultation</button>
-                                <button type="button" onClick={() => setConsultationType('PANCHKARMA')} className={`px-4 py-2 text-xs font-bold rounded-md transition ${consultationType === 'PANCHKARMA' ? 'bg-[#c5a059] text-[#1e3a29] shadow' : 'text-gray-500 hover:bg-gray-200'}`}>Panchkarma / Procedure</button>
+                                <button type="button" onClick={() => setConsultationType('REGULAR')} className={`px-4 py-2 text-xs font-bold rounded-md transition ${consultationType === 'REGULAR' ? 'bg-[#0f172a] text-white shadow' : 'text-gray-500 hover:bg-gray-200'}`}>Regular Consultation</button>
+                                <button type="button" onClick={() => setConsultationType('PANCHKARMA')} className={`px-4 py-2 text-xs font-bold rounded-md transition ${consultationType === 'PANCHKARMA' ? 'bg-[#0284c7] text-[#0f172a] shadow' : 'text-gray-500 hover:bg-gray-200'}`}>Panchkarma / Procedure</button>
                             </div>
 
                             {consultationType === 'REGULAR' && (
                                 <>
-                                    <div className="mb-4">
-                                        <label className="text-[10px] font-bold uppercase text-gray-400">Diagnosis / Symptoms</label>
-                                        <textarea className="w-full p-3 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-[#c5a059] outline-none" rows={2} value={visitNote} onChange={(e) => setVisitNote(e.target.value)} placeholder="Enter diagnosis..." />
+                                    {/* VITALS SECTION */}
+                                    <div className="mb-4 grid grid-cols-2 md:grid-cols-4 gap-3 bg-gray-50 border p-3 rounded-lg">
+                                        <div><label className="text-[10px] font-bold uppercase text-gray-500">BP</label><input placeholder="e.g. 120/80" className="w-full p-2 border rounded text-xs bg-white" value={bloodPressure} onChange={(e) => setBloodPressure(e.target.value)} /></div>
+                                        <div><label className="text-[10px] font-bold uppercase text-gray-500">Pulse</label><input placeholder="e.g. 72 bpm" className="w-full p-2 border rounded text-xs bg-white" value={pulse} onChange={(e) => setPulse(e.target.value)} /></div>
+                                        <div><label className="text-[10px] font-bold uppercase text-gray-500">Temp</label><input placeholder="e.g. 98.6 F" className="w-full p-2 border rounded text-xs bg-white" value={temperature} onChange={(e) => setTemperature(e.target.value)} /></div>
+                                        <div><label className="text-[10px] font-bold uppercase text-gray-500">Resp</label><input placeholder="e.g. 16/min" className="w-full p-2 border rounded text-xs bg-white" value={respiratoryRate} onChange={(e) => setRespiratoryRate(e.target.value)} /></div>
                                     </div>
+
+                                    {/* CASE TAKING */}
+                                    <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="text-[10px] font-bold uppercase text-gray-400">Diagnosis / Symptoms</label>
+                                            <textarea className="w-full p-3 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" rows={2} value={visitNote} onChange={(e) => setVisitNote(e.target.value)} placeholder="Enter Chief Complaints & Diagnosis..." />
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] font-bold uppercase text-gray-400">Aggravation / Amelioration</label>
+                                            <textarea className="w-full p-3 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" rows={2} value={aggravationAmelioration} onChange={(e) => setAggravationAmelioration(e.target.value)} placeholder="e.g. < morning, > warmth" />
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="text-[10px] font-bold uppercase text-gray-400">Miasms</label>
+                                            <input className="w-full p-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" value={miasms} onChange={(e) => setMiasms(e.target.value)} placeholder="e.g. Psora, Sycosis..." />
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] font-bold uppercase text-gray-400">Special Note (Optional)</label>
+                                            <input className="w-full p-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" value={panchkarmaNote} onChange={(e) => setPanchkarmaNote(e.target.value)} placeholder="Additional private notes..." />
+                                        </div>
+                                    </div>
+
+                                    {/* REPERTORY TAGGING */}
                                     <div className="mb-4">
-                                        <label className="text-[10px] font-bold uppercase text-gray-400">Special Note (Optional)</label>
-                                        <textarea className="w-full p-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-[#c5a059] outline-none" rows={1} value={panchkarmaNote} onChange={(e) => setPanchkarmaNote(e.target.value)} placeholder="Enter special notes..." />
+                                        <label className="text-[10px] font-bold uppercase text-gray-400">Repertory Rubrics</label>
+                                        <div className="relative">
+                                            <input className="w-full p-2 border rounded-lg text-sm bg-white outline-none focus:ring-2 focus:ring-[#0284c7]" placeholder="Search chapter or rubric... e.g. Mind Anxiety" value={repSearch} onChange={e => { setRepSearch(e.target.value); setShowRep(true); }} onFocus={() => setShowRep(true)} />
+                                            {showRep && repSearch.length > 0 && (
+                                                <div className="absolute top-full mt-1 left-0 w-full bg-white border shadow-lg max-h-48 overflow-y-auto z-50 rounded-lg">
+                                                    {repertoryData.flatMap(chap => chap.rubrics.map(rub => ({ chapter: chap.chapter, rubric: rub })))
+                                                        .filter(r => `${r.chapter} ${r.rubric}`.toLowerCase().includes(repSearch.toLowerCase()))
+                                                        .slice(0, 20)
+                                                        .map((r, i) => (
+                                                            <button key={i} type="button" onClick={() => {
+                                                                if (!repertoryRubrics.includes(`${r.chapter} - ${r.rubric}`)) {
+                                                                    setRepertoryRubrics([...repertoryRubrics, `${r.chapter} - ${r.rubric}`]);
+                                                                }
+                                                                setRepSearch("");
+                                                                setShowRep(false);
+                                                            }} className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 border-b last:border-0 block">
+                                                                <span className="font-bold text-gray-700">{r.chapter}:</span> {r.rubric}
+                                                            </button>
+                                                        ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                        {repertoryRubrics.length > 0 && (
+                                            <div className="flex flex-wrap gap-2 mt-2">
+                                                {repertoryRubrics.map((r, idx) => (
+                                                    <span key={idx} className="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 border border-blue-200">
+                                                        {r} <button type="button" onClick={() => setRepertoryRubrics(repertoryRubrics.filter((_, i) => i !== idx))} className="hover:text-red-500"><X size={12} /></button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 </>
                             )}
 
                             {consultationType === 'PANCHKARMA' && (
                                 <div className="mb-4">
-                                    <label className="text-[10px] font-bold uppercase text-[#c5a059]">Procedure Details / Notes</label>
+                                    <label className="text-[10px] font-bold uppercase text-[#0284c7]">Procedure Details / Notes</label>
                                     <textarea
                                         className="w-full p-3 border border-purple-100 rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-400 bg-purple-50"
                                         rows={3}
@@ -568,7 +669,7 @@ export default function PatientProfileClient({
                                         {showMedList && (
                                             <div className="absolute top-full mt-1 left-0 w-full bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto z-40">
                                                 {inventory.filter(i => i.name.toLowerCase().includes(medQuery.toLowerCase())).map(item => (
-                                                    <button type="button" key={item.id} onClick={() => selectMedicine(item)} className="w-full text-left px-3 py-2 text-sm hover:bg-green-50 text-[#1e3a29] border-b">{item.name}</button>
+                                                    <button type="button" key={item.id} onClick={() => selectMedicine(item)} className="w-full text-left px-3 py-2 text-sm hover:bg-green-50 text-[#0f172a] border-b">{item.name}</button>
                                                 ))}
                                             </div>
                                         )}
@@ -576,13 +677,14 @@ export default function PatientProfileClient({
 
                                     {consultationType === 'REGULAR' && (
                                         <>
+                                            <div className="col-span-6 md:col-span-2"><label className="text-[10px] font-bold uppercase text-gray-500">Potency</label><input list="potency-opts" className="w-full p-2 border rounded text-sm bg-white" value={newMed.potency} onChange={e => setNewMed({ ...newMed, potency: e.target.value })} /><datalist id="potency-opts">{POTENCY_OPTIONS.map(opt => <option key={opt}>{opt}</option>)}</datalist></div>
                                             <div className="col-span-6 md:col-span-2"><label className="text-[10px] font-bold uppercase text-gray-500">Dosage</label><select className="w-full p-2 border rounded text-sm bg-white" value={newMed.dosage} onChange={e => setNewMed({ ...newMed, dosage: e.target.value })}>{DOSAGE_OPTIONS.map(opt => <option key={opt}>{opt}</option>)}</select></div>
-                                            <div className="col-span-6 md:col-span-2"><label className="text-[10px] font-bold uppercase text-gray-500">Unit</label><select className="w-full p-2 border rounded text-sm bg-white" value={newMed.unit} onChange={e => setNewMed({ ...newMed, unit: e.target.value })}>{UNIT_OPTIONS.map(opt => <option key={opt}>{opt}</option>)}</select></div>
+                                            <div className="col-span-6 md:col-span-2"><label className="text-[10px] font-bold uppercase text-gray-500">Vehicle</label><select className="w-full p-2 border rounded text-sm bg-white" value={newMed.vehicle} onChange={e => setNewMed({ ...newMed, vehicle: e.target.value })}>{VEHICLE_OPTIONS.map(opt => <option key={opt}>{opt}</option>)}</select></div>
                                         </>
                                     )}
 
                                     <div className="col-span-6 md:col-span-2"><label className="text-[10px] font-bold uppercase text-gray-500">Duration</label><select className="w-full p-2 border rounded text-sm bg-white" value={newMed.duration} onChange={e => setNewMed({ ...newMed, duration: e.target.value })}>{(consultationType === 'PANCHKARMA' ? PANCHKARMA_DURATIONS : REGULAR_DURATIONS).map(opt => <option key={opt}>{opt}</option>)}</select></div>
-                                    <div className="col-span-6 md:col-span-2"><button type="button" onClick={handleAddMedicine} className={`w-full h-[38px] text-white rounded flex items-center justify-center text-sm font-bold shadow-md ${editingMedId !== null ? 'bg-amber-500 hover:bg-amber-600' : 'bg-[#1e3a29] hover:bg-[#162b1e]'}`}>{editingMedId !== null ? <Save size={16} /> : <Plus size={16} />}<span className="ml-1">ADD</span></button></div>
+                                    <div className="col-span-6 md:col-span-2"><button type="button" onClick={handleAddMedicine} className={`w-full h-[38px] text-white rounded flex items-center justify-center text-sm font-bold shadow-md ${editingMedId !== null ? 'bg-amber-500 hover:bg-amber-600' : 'bg-[#0f172a] hover:bg-[#020617]'}`}>{editingMedId !== null ? <Save size={16} /> : <Plus size={16} />}<span className="ml-1">ADD</span></button></div>
                                 </div>
 
                                 <div className="grid grid-cols-12 gap-3 items-end mt-2">
@@ -609,7 +711,7 @@ export default function PatientProfileClient({
                                         <tbody className="divide-y divide-gray-100">
                                             {currentPrescriptions.map((p) => (
                                                 <tr key={p.id} className={editingMedId === p.id ? "bg-amber-50" : ""}>
-                                                    <td className="p-2 pl-3"><div className="font-bold text-[#1e3a29]">{p.medicineName}</div><div className="text-xs text-gray-500">{p.unit} • {p.duration}</div></td>
+                                                    <td className="p-2 pl-3"><div className="font-bold text-[#0f172a]">{p.medicineName} <span className="font-mono text-purple-700 font-bold ml-1">{p.potency !== "-" ? p.potency : ""}</span></div><div className="text-xs text-gray-500">{p.vehicle} • {p.duration}</div></td>
                                                     <td className="p-2 font-mono text-xs">{p.dosage}</td>
                                                     <td className="p-2 text-xs text-gray-600">{p.instruction}</td>
                                                     <td className="p-2 text-right"><button onClick={() => handleEditDraftMedicine(p)} className="text-blue-400 hover:text-blue-600 mr-2"><Edit2 size={16} /></button><button onClick={() => removeDraftMedicine(p.id)} className="text-red-400 hover:text-red-600"><Trash2 size={16} /></button></td>
@@ -629,7 +731,7 @@ export default function PatientProfileClient({
                                     </div>
                                 </div>
 
-                                <button type="button" onClick={handleSaveVisit} className={`px-6 py-2 rounded font-bold text-sm shadow flex items-center gap-2 ${editingVisitId ? 'bg-amber-400 text-black hover:bg-amber-500' : 'bg-[#c5a059] text-[#1e3a29] hover:bg-[#b08d4b]'}`}>
+                                <button type="button" onClick={handleSaveVisit} className={`px-6 py-2 rounded font-bold text-sm shadow flex items-center gap-2 ${editingVisitId ? 'bg-amber-400 text-black hover:bg-amber-500' : 'bg-[#0284c7] text-[#0f172a] hover:bg-[#0369a1]'}`}>
                                     <FileText size={16} /> {editingVisitId ? "Update Consultation" : "Save Consultation"}
                                 </button>
                             </div>

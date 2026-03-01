@@ -120,7 +120,7 @@ export async function createPatient(data: any) {
       data: {
         readableId,
         name: data.name, phone: data.phone, age: parseInt(data.age) || 0,
-        gender: data.gender, bloodGroup: data.bloodGroup, prakriti: data.prakriti,
+        gender: data.gender, bloodGroup: data.bloodGroup, height: data.height,
         initialWeight: data.initialWeight, currentWeight: data.currentWeight, history: data.history,
         chiefComplaints: data.chiefComplaints, kco: data.kco, currentMedications: data.currentMedications,
         investigations: data.investigations, pastHistory: data.pastHistory, familyHistory: data.familyHistory,
@@ -139,8 +139,8 @@ export async function updatePatient(id: string, data: any) {
     await db.patient.update({
       where: { id },
       data: {
-        name: data.name, age: ageVal, gender: data.gender, phone: data.phone,
-        bloodGroup: data.bloodGroup, prakriti: data.prakriti,
+        name: data.name, age: ageVal, phone: data.phone,
+        gender: data.gender, bloodGroup: data.bloodGroup, height: data.height,
         initialWeight: data.initialWeight, currentWeight: data.currentWeight, history: data.history,
         chiefComplaints: data.chiefComplaints, kco: data.kco, currentMedications: data.currentMedications,
         investigations: data.investigations, pastHistory: data.pastHistory, familyHistory: data.familyHistory,
@@ -297,7 +297,7 @@ export async function createAppointment(data: any) {
       }
     }
 
-    const idType = data.type.includes('Panchkarma') ? 'ipd' : 'opd';
+    const idType = (data.type.includes('Panchkarma') || data.type.includes('Procedure')) ? 'ipd' : 'opd';
     for (const dateString of targetDates) {
       const readableId = await generateReadableId(idType);
       await db.appointment.create({
@@ -776,6 +776,7 @@ export async function createMedicine(data: any) {
     await db.medicine.create({
       data: {
         name: data.name, type: data.type || "Tablet",
+        potency: data.potency || null, vehicle: data.vehicle || null,
         stock: parseInt(data.stock) || 0, price: parseFloat(data.price) || 0,
         minStock: parseInt(data.minStock) || 10,
         mfgDate: data.mfgDate ? new Date(data.mfgDate) : null,
@@ -798,6 +799,8 @@ export async function updateMedicine(id: string, data: any) {
     if (data.mfgDate) updateData.mfgDate = new Date(data.mfgDate);
     if (data.expDate) updateData.expDate = new Date(data.expDate);
     if (data.type) updateData.type = data.type;
+    if (data.potency !== undefined) updateData.potency = data.potency;
+    if (data.vehicle !== undefined) updateData.vehicle = data.vehicle;
 
     await db.medicine.update({ where: { id }, data: updateData });
     revalidatePath('/pharmacy');

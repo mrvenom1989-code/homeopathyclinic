@@ -1,6 +1,6 @@
-# Rudra-Ayurved Improvement Plan
+# Clinic Management System Improvement Plan
 
-This document outlines the plan to improve the security, code quality, performance, and testing of the `rudra-ayurved` application.
+This document outlines the plan to improve the security, code quality, performance, and testing of the `clinic-management-system` application.
 
 ## 1. Security
 

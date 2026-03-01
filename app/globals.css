@@ -7,7 +7,7 @@
   --foreground: #171717;
 }
 
-/* Rudra Custom Colors - these connect to tailwind.config.js */
+/* Clinic Custom Colors - these connect to tailwind.config.js */
 /* You don't need to define them here if they are in tailwind.config.js, 
    but this ensures the font is smooth */
 html {

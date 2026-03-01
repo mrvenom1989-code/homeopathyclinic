@@ -4,7 +4,7 @@ import PharmacyClient from "./PharmacyClient";
 
 export default function PharmacyPage() {
   return (
-    <Suspense fallback={<div className="h-screen flex items-center justify-center bg-[#FDFBF7]"><Loader2 className="animate-spin text-[#c5a059]" size={48} /></div>}>
+    <Suspense fallback={<div className="h-screen flex items-center justify-center bg-[#FDFBF7]"><Loader2 className="animate-spin text-[#0284c7]" size={48} /></div>}>
       <PharmacyClient />
     </Suspense>
   )

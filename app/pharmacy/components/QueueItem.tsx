@@ -86,7 +86,7 @@ const QueueItem = memo(({
         if (!consult.patient?.phone && !consult.phone) return alert("No phone number found.");
         let phone = (consult.patient?.phone || consult.phone).replace(/[^0-9]/g, '');
         if (phone.length === 10) phone = "91" + phone;
-        const message = `Namaste ${displayName}, your total pharmacy bill at Rudra Ayurved is ₹${finalTotal.toFixed(0)}. Thank you for visiting us.`;
+        const message = `Namaste ${displayName}, your total pharmacy bill at our clinic is ₹${finalTotal.toFixed(0)}. Thank you for visiting us.`;
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     };
 
@@ -99,7 +99,7 @@ const QueueItem = memo(({
             <div className="flex justify-between items-start mb-4">
                 <div>
                     <div className="flex items-center gap-3">
-                        <h3 className="text-lg font-bold text-[#1e3a29]">{displayName}</h3>
+                        <h3 className="text-lg font-bold text-[#0f172a]">{displayName}</h3>
                         {!isHistory && (
                             <span className={`text-[10px] px-2 py-0.5 rounded font-bold border flex items-center gap-1 ${fee > 0 ? 'bg-green-50 text-green-700 border-green-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>
                                 <Stethoscope size={10} />
@@ -127,7 +127,7 @@ const QueueItem = memo(({
 
                 {!isHistory && (
                     <div className="flex flex-col items-end gap-2">
-                        <div className="text-lg font-bold text-[#1e3a29] flex items-center gap-2 bg-green-50 px-3 py-1 rounded border border-green-100">
+                        <div className="text-lg font-bold text-[#0f172a] flex items-center gap-2 bg-green-50 px-3 py-1 rounded border border-green-100">
                             <Banknote size={18} className="text-green-600" />
                             Total: ₹{finalTotal.toFixed(0)}
                         </div>
@@ -145,16 +145,16 @@ const QueueItem = memo(({
                             </button>
 
                             <button onClick={async () => { await persistFinancials(); printConsultationBill(consult); }} className="bg-blue-50 border border-blue-200 text-blue-700 font-bold px-3 py-2 rounded-lg text-xs hover:bg-blue-100 transition flex items-center gap-1"><FileText size={14} /> Consult</button>
-                            <button onClick={async () => { await persistFinancials(); printPharmacyBill(consult, false); }} className="bg-white border border-[#1e3a29] text-[#1e3a29] font-bold px-3 py-2 rounded-lg text-xs hover:bg-gray-50 transition flex items-center gap-1"><FileText size={14} /> Meds</button>
-                            <button onClick={async () => { await persistFinancials(); handleDispenseAll(items); }} className="bg-[#1e3a29] text-white font-bold px-4 py-2 rounded-lg text-xs shadow hover:bg-[#162b1e] transition flex items-center gap-2"><CheckCircle size={14} /> Dispense</button>
+                            <button onClick={async () => { await persistFinancials(); printPharmacyBill(consult, false); }} className="bg-white border border-[#0f172a] text-[#0f172a] font-bold px-3 py-2 rounded-lg text-xs hover:bg-gray-50 transition flex items-center gap-1"><FileText size={14} /> Meds</button>
+                            <button onClick={async () => { await persistFinancials(); handleDispenseAll(items); }} className="bg-[#0f172a] text-white font-bold px-4 py-2 rounded-lg text-xs shadow hover:bg-[#020617] transition flex items-center gap-2"><CheckCircle size={14} /> Dispense</button>
                         </div>
                     </div>
                 )}
 
                 {isHistory && (
                     <div className="flex flex-col items-end">
-                        <div className="mt-2 text-sm font-bold text-[#1e3a29] flex items-center gap-2 mb-2">
-                            <Banknote size={16} className="text-[#c5a059]" /> Total Bill: ₹{finalTotal.toFixed(0)}
+                        <div className="mt-2 text-sm font-bold text-[#0f172a] flex items-center gap-2 mb-2">
+                            <Banknote size={16} className="text-[#0284c7]" /> Total Bill: ₹{finalTotal.toFixed(0)}
                         </div>
                         <div className="flex gap-2">
                             <button onClick={handleShareBill} className="text-[#25D366] hover:bg-green-50 p-2 rounded-lg transition border border-transparent hover:border-green-200" title="Share Bill on WhatsApp">
@@ -192,10 +192,10 @@ const QueueItem = memo(({
                             return (
                                 <tr key={item.id} className={item.status === 'DISPENSED' ? 'bg-green-50' : ''}>
                                     <td className="p-3">
-                                        <div className="font-medium text-[#1e3a29]">{item.medicine?.name || "Unknown"}</div>
+                                        <div className="font-medium text-[#0f172a]">{item.medicine?.name || "Unknown"}</div>
                                         <div className="flex gap-2 mt-1">
-                                            <span className="text-[10px] bg-gray-200 px-1.5 py-0.5 rounded text-gray-600 font-bold">{item.unit || "Tablet"}</span>
-                                            {item.panchkarma && <span className="text-[10px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold">{item.panchkarma}</span>}
+                                            {item.panchkarma && item.panchkarma !== "-" && <span className="text-[10px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold">{item.panchkarma}</span>}
+                                            <span className="text-[10px] bg-gray-200 px-1.5 py-0.5 rounded text-gray-600 font-bold">{item.unit || "Pills"}</span>
                                         </div>
                                     </td>
                                     <td className="p-3">
@@ -205,7 +205,7 @@ const QueueItem = memo(({
                                     <td className="p-3 font-bold text-gray-600">{item.duration}</td>
                                     <td className="p-3 text-center">
                                         {item.status === 'PENDING' ? (
-                                            <input type="number" className="w-16 p-1 border border-gray-300 rounded text-center text-sm font-bold focus:border-[#c5a059] outline-none"
+                                            <input type="number" className="w-16 p-1 border border-gray-300 rounded text-center text-sm font-bold focus:border-[#0284c7] outline-none"
                                                 value={dispenseQtys[item.id] || "1"}
                                                 onChange={(e) => handleQtyChange(item.id, e.target.value)} min="1" />
                                         ) : (
@@ -217,7 +217,7 @@ const QueueItem = memo(({
                                         {item.status === 'DISPENSED' ? (
                                             <span className="inline-flex items-center gap-1 text-green-700 font-bold text-xs bg-green-100 px-2 py-1 rounded-full"><CheckCircle size={12} /> Dispensed</span>
                                         ) : (
-                                            <button onClick={() => handleDispenseItem(item.id)} className="inline-flex items-center gap-1 bg-[#c5a059] text-[#1e3a29] font-bold text-xs px-3 py-1.5 rounded hover:bg-[#b08d4b]">Dispense</button>
+                                            <button onClick={() => handleDispenseItem(item.id)} className="inline-flex items-center gap-1 bg-[#0284c7] text-[#0f172a] font-bold text-xs px-3 py-1.5 rounded hover:bg-[#0369a1]">Dispense</button>
                                         )}
                                     </td>
                                 </tr>

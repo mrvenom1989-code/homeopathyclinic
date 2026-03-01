@@ -156,7 +156,7 @@ export async function updatePatientDetails(id: string, data: any) {
         gender: data.gender,
         phone: data.phone,
         bloodGroup: data.bloodGroup,
-        prakriti: data.prakriti,
+        height: data.height,
         initialWeight: data.initialWeight,
         currentWeight: data.currentWeight,
         history: data.history,
@@ -353,7 +353,14 @@ export async function savePrescription(patientId: string, visitData: any, consul
             notes: visitData.notes,
             discount: pharmacyDiscount,
             paidAmount: paidAmount,
-            paymentMode: paymentMode
+            paymentMode: paymentMode,
+            bloodPressure: visitData.bloodPressure,
+            pulse: visitData.pulse,
+            temperature: visitData.temperature,
+            respiratoryRate: visitData.respiratoryRate,
+            miasms: visitData.miasms,
+            aggravationAmelioration: visitData.aggravationAmelioration,
+            repertoryRubrics: visitData.repertoryRubrics
           }
         });
       } else {
@@ -369,6 +376,13 @@ export async function savePrescription(patientId: string, visitData: any, consul
             appointmentId: finalAppointmentId,
             paidAmount: paidAmount,
             paymentMode: paymentMode,
+            bloodPressure: visitData.bloodPressure,
+            pulse: visitData.pulse,
+            temperature: visitData.temperature,
+            respiratoryRate: visitData.respiratoryRate,
+            miasms: visitData.miasms,
+            aggravationAmelioration: visitData.aggravationAmelioration,
+            repertoryRubrics: visitData.repertoryRubrics,
             createdAt: new Date()
           }
         });
@@ -426,7 +440,7 @@ export async function createPatient(data: any) {
       data: {
         readableId,
         name: data.name, phone: data.phone, age: parseInt(data.age) || 0,
-        gender: data.gender, bloodGroup: data.bloodGroup, prakriti: data.prakriti,
+        gender: data.gender, bloodGroup: data.bloodGroup, height: data.height,
         initialWeight: data.initialWeight, currentWeight: data.currentWeight, history: data.history,
         chiefComplaints: data.chiefComplaints, kco: data.kco, currentMedications: data.currentMedications,
         investigations: data.investigations, pastHistory: data.pastHistory, familyHistory: data.familyHistory,
@@ -447,7 +461,7 @@ export async function updatePatient(id: string, data: any) {
       where: { id },
       data: {
         name: data.name, age: ageVal, gender: data.gender, phone: data.phone,
-        bloodGroup: data.bloodGroup, prakriti: data.prakriti,
+        bloodGroup: data.bloodGroup, height: data.height,
         initialWeight: data.initialWeight, currentWeight: data.currentWeight, history: data.history,
         chiefComplaints: data.chiefComplaints, kco: data.kco, currentMedications: data.currentMedications,
         investigations: data.investigations, pastHistory: data.pastHistory, familyHistory: data.familyHistory,

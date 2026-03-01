@@ -6,8 +6,8 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
 
 export const metadata: Metadata = {
-  title: 'Rudra Ayurved',
-  description: 'Premium Ayurvedic Care',
+  title: 'Clinic Management System',
+  description: 'Premium Healthcare',
 }
 
 export default function RootLayout({
@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} font-sans bg-rudra-cream text-gray-800`}>
+      <body className={`${inter.variable} ${playfair.variable} font-sans bg-clinic-cream text-gray-800`}>
         {children}
       </body>
     </html>

@@ -178,18 +178,18 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] font-sans text-neutral-800 selection:bg-[#c5a059] selection:text-white">
+    <div className="min-h-screen bg-[#FDFBF7] font-sans text-neutral-800 selection:bg-[#0284c7] selection:text-white">
 
       {/* --- TOP BAR (CONTACT & SOCIALS) --- */}
       {/* ✅ DESIGN CHANGE: Removed global pulse, added Gold Badge to phone for 'pop' */}
-      <div className="bg-[#1e3a29] text-white/90 text-[11px] md:text-xs py-2 px-6 md:px-10 flex justify-between items-center z-50 relative border-b border-[#c5a059]">
+      <div className="bg-[#0f172a] text-white/90 text-[11px] md:text-xs py-2 px-6 md:px-10 flex justify-between items-center z-50 relative border-b border-[#0284c7]">
         <div className="flex gap-4 md:gap-6 items-center">
           {/* Gold Badge for Phone */}
-          <a href="tel:+916352135799" className="flex items-center gap-1.5 bg-[#c5a059] text-[#1e3a29] px-2 py-0.5 rounded-sm font-bold hover:bg-white hover:text-[#1e3a29] transition shadow-sm">
+          <a href="tel:+916352135799" className="flex items-center gap-1.5 bg-[#0284c7] text-[#0f172a] px-2 py-0.5 rounded-sm font-bold hover:bg-white hover:text-[#0f172a] transition shadow-sm">
             <Phone size={12} /> +91 63521 35799
           </a>
-          <a href="mailto:rudraayurved5@gmail.com" className="hidden md:flex items-center gap-1.5 hover:text-[#c5a059] transition">
-            <Mail size={12} className="text-[#c5a059]" /> rudraayurved5@gmail.com
+          <a href="mailto:contact@clinic.com" className="hidden md:flex items-center gap-1.5 hover:text-[#0284c7] transition">
+            <Mail size={12} className="text-[#0284c7]" /> contact@clinic.com
           </a>
         </div>
         <div className="flex gap-3 md:gap-4 items-center">
@@ -198,10 +198,10 @@ export default function LandingPage() {
             {/* Subtle pulse on just the icon */}
             <MessageCircle size={15} className="animate-pulse" />
           </a>
-          <a href="https://www.instagram.com/rudraayurved5/?hl=en" target="_blank" className="hover:text-[#E1306C] transition" title="Instagram">
+          <a href="#" target="_blank" className="hover:text-[#E1306C] transition" title="Instagram">
             <Instagram size={15} className="animate-pulse" />
           </a>
-          <a href="https://www.facebook.com/p/Rudra-Ayurved-61577961763044/" target="_blank" className="hover:text-[#1877F2] transition" title="Facebook">
+          <a href="#" target="_blank" className="hover:text-[#1877F2] transition" title="Facebook">
             <Facebook size={15} className="animate-pulse" />
           </a>
         </div>
@@ -214,26 +214,26 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <div className="relative w-14 h-14">
               <Image
-                src="/rudralogo.png"
-                alt="Rudra Ayurved Logo"
+                src="/logo-placeholder.png"
+                alt="Clinic Logo"
                 fill
                 className="object-contain"
                 priority
               />
             </div>
             <div className="leading-tight flex flex-col justify-center">
-              <h1 className="font-serif text-2xl font-bold text-[#B09B5C] tracking-wide">RUDRA AYURVED</h1>
-              <span className="text-[10px] font-bold text-[#1e3a29] tracking-[0.2em] uppercase">Multi - Speciality Panchkarma Hospital</span>
+              <h1 className="font-serif text-2xl font-bold text-[#B09B5C] tracking-wide">CLINIC NAME</h1>
+              <span className="text-[10px] font-bold text-[#0f172a] tracking-[0.2em] uppercase">Multi - Speciality Homeopathy Clinic</span>
             </div>
           </div>
 
           <div className="flex items-center gap-4 md:gap-8">
-            <Link href="#specialists" className="hidden md:block text-sm font-medium text-gray-600 hover:text-[#c5a059] transition">Specialists</Link>
-            <Link href="#treatments" className="hidden md:block text-sm font-medium text-gray-600 hover:text-[#c5a059] transition">Treatments</Link>
-            <Link href="#gallery" className="hidden md:block text-sm font-medium text-gray-600 hover:text-[#c5a059] transition">Clinic</Link>
-            <Link href="#contact" className="hidden md:block text-sm font-medium text-gray-600 hover:text-[#c5a059] transition">Visit Us</Link>
+            <Link href="#specialists" className="hidden md:block text-sm font-medium text-gray-600 hover:text-[#0284c7] transition">Specialists</Link>
+            <Link href="#treatments" className="hidden md:block text-sm font-medium text-gray-600 hover:text-[#0284c7] transition">Treatments</Link>
+            <Link href="#gallery" className="hidden md:block text-sm font-medium text-gray-600 hover:text-[#0284c7] transition">Clinic</Link>
+            <Link href="#contact" className="hidden md:block text-sm font-medium text-gray-600 hover:text-[#0284c7] transition">Visit Us</Link>
 
-            <Link href="/login" className="bg-[#1e3a29] text-white px-4 md:px-5 py-2 rounded-full text-xs md:text-sm font-bold hover:bg-[#2a4d38] transition flex items-center gap-2 shadow-lg shadow-[#1e3a29]/20">
+            <Link href="/login" className="bg-[#0f172a] text-white px-4 md:px-5 py-2 rounded-full text-xs md:text-sm font-bold hover:bg-[#2a4d38] transition flex items-center gap-2 shadow-lg shadow-[#0f172a]/20">
               Staff Login <ArrowRight size={15} />
             </Link>
           </div>
@@ -256,57 +256,57 @@ export default function LandingPage() {
 
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10">
           <div className="max-w-2xl animate-in fade-in slide-in-from-bottom-10 duration-700">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5a059]/10 text-[#c5a059] text-xs font-bold tracking-widest uppercase mb-6 border border-[#c5a059]/20 backdrop-blur-sm">
-              <Sparkles size={12} /> Multi-Speciality Panchkarma Hospital
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0284c7]/10 text-[#0284c7] text-xs font-bold tracking-widest uppercase mb-6 border border-[#0284c7]/20 backdrop-blur-sm">
+              <Sparkles size={12} /> Multi-Speciality Homeopathy Clinic
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-serif font-bold text-[#1e3a29] leading-[1.1] mb-6 drop-shadow-sm">
+            <h1 className="text-5xl md:text-7xl font-serif font-bold text-[#0f172a] leading-[1.1] mb-6 drop-shadow-sm">
               Healing Roots, <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#c5a059] to-[#8a6e3e]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0284c7] to-[#8a6e3e]">
                 Glowing Future.
               </span>
             </h1>
 
             <p className="text-lg text-gray-600 mb-8 leading-relaxed max-w-lg font-medium">
-              <i>"आयुर्वेद: शाश्वतो स्वास्थ्य"</i> — Restoring your natural balance through ancient Nadi Pariksha and modern Aesthetic Cosmetology treatments.
+              <i>"Healing: Eternal Health"</i> — Restoring your natural balance through ancient Nadi Pariksha and modern Aesthetic Cosmetology treatments.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={() => setIsBookingModalOpen(true)}
-                className="bg-[#1e3a29] text-white px-8 py-3.5 rounded-lg font-bold hover:bg-[#2a4d38] transition shadow-xl shadow-[#1e3a29]/10 flex items-center justify-center gap-2"
+                className="bg-[#0f172a] text-white px-8 py-3.5 rounded-lg font-bold hover:bg-[#2a4d38] transition shadow-xl shadow-[#0f172a]/10 flex items-center justify-center gap-2"
               >
                 <Calendar size={18} /> Book Consultation
               </button>
-              <Link href="#treatments" className="px-8 py-3.5 border border-[#1e3a29] rounded-lg font-bold text-[#1e3a29] hover:bg-[#1e3a29] hover:text-white transition text-center bg-white/50 backdrop-blur-sm">
+              <Link href="#treatments" className="px-8 py-3.5 border border-[#0f172a] rounded-lg font-bold text-[#0f172a] hover:bg-[#0f172a] hover:text-white transition text-center bg-white/50 backdrop-blur-sm">
                 Explore Services
               </Link>
             </div>
           </div>
 
           <div className="hidden md:block relative">
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#c5a059]/20 rounded-full blur-3xl -z-10"></div>
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#0284c7]/20 rounded-full blur-3xl -z-10"></div>
             <div className="relative z-10 grid grid-cols-2 gap-4">
               <div className="space-y-4 mt-8">
                 <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-gray-100 transform hover:-translate-y-1 transition duration-300">
-                  <Leaf className="text-[#1e3a29] mb-2" size={28} />
-                  <h3 className="font-bold text-[#1e3a29]">Kerala Panchakarma</h3>
+                  <Leaf className="text-[#0f172a] mb-2" size={28} />
+                  <h3 className="font-bold text-[#0f172a]">Kerala Panchakarma</h3>
                   <p className="text-xs text-gray-500 mt-1">Detoxification & Rejuvenation</p>
                 </div>
                 <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-gray-100 transform hover:-translate-y-1 transition duration-300">
-                  <Sparkles className="text-[#c5a059] mb-2" size={28} />
-                  <h3 className="font-bold text-[#1e3a29]">Cosmetology Tech</h3>
+                  <Sparkles className="text-[#0284c7] mb-2" size={28} />
+                  <h3 className="font-bold text-[#0f172a]">Cosmetology Tech</h3>
                   <p className="text-xs text-gray-500 mt-1">Hair Restoration & Skin Rejuvenation</p>
                 </div>
               </div>
               <div className="space-y-4">
-                <div className="bg-[#1e3a29] p-6 rounded-2xl shadow-lg text-white transform hover:-translate-y-1 transition duration-300">
+                <div className="bg-[#0f172a] p-6 rounded-2xl shadow-lg text-white transform hover:-translate-y-1 transition duration-300">
                   <h3 className="font-serif text-2xl font-bold">15+</h3>
-                  <p className="text-xs text-[#c5a059] uppercase tracking-wider mt-1">Years Experience</p>
+                  <p className="text-xs text-[#0284c7] uppercase tracking-wider mt-1">Years Experience</p>
                 </div>
                 <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-gray-100 transform hover:-translate-y-1 transition duration-300">
-                  <CheckCircle2 className="text-[#1e3a29] mb-2" size={28} />
-                  <h3 className="font-bold text-[#1e3a29]">Nadi Pariksha</h3>
+                  <CheckCircle2 className="text-[#0f172a] mb-2" size={28} />
+                  <h3 className="font-bold text-[#0f172a]">Nadi Pariksha</h3>
                   <p className="text-xs text-gray-500 mt-1">Pulse Diagnosis</p>
                 </div>
               </div>
@@ -319,73 +319,73 @@ export default function LandingPage() {
       <section id="specialists" className="py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="text-center mb-16">
-            <span className="text-[#c5a059] font-bold text-xs uppercase tracking-widest">Our Experts</span>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-[#1e3a29] mt-3">Meet The Healers</h2>
-            <div className="w-20 h-1 bg-[#c5a059] mx-auto mt-6 rounded-full"></div>
+            <span className="text-[#0284c7] font-bold text-xs uppercase tracking-widest">Our Experts</span>
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-[#0f172a] mt-3">Meet The Healers</h2>
+            <div className="w-20 h-1 bg-[#0284c7] mx-auto mt-6 rounded-full"></div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             {/* Doctor 1 */}
-            <div className="group relative bg-[#FDFBF7] rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-[#1e3a29]/10 transition duration-500 border border-gray-100">
+            <div className="group relative bg-[#FDFBF7] rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-[#0f172a]/10 transition duration-500 border border-gray-100">
               <div className="aspect-[4/3] relative overflow-hidden">
                 <Image
-                  src="/rudrachirag.jpg"
-                  alt="Dr. Chirag Raval"
+                  src="/doctor-placeholder.jpg"
+                  alt="Doctor 1"
                   fill
                   className="object-cover object-top transition duration-700 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1e3a29]/90 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 flex items-end p-8">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/90 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 flex items-end p-8">
                   <p className="text-white/90 text-sm">
                     "Ayurveda is not just a system of medicine, it is a science of life. My goal is to treat the root cause, not just symptoms."
                   </p>
                 </div>
               </div>
               <div className="p-8 relative">
-                <div className="absolute -top-6 right-8 w-12 h-12 bg-[#1e3a29] rounded-full flex items-center justify-center text-white shadow-lg">
+                <div className="absolute -top-6 right-8 w-12 h-12 bg-[#0f172a] rounded-full flex items-center justify-center text-white shadow-lg">
                   <Leaf size={20} />
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-[#1e3a29] mb-1">Dr. Chirag Raval</h3>
-                <p className="text-xs font-bold text-[#c5a059] uppercase tracking-wider mb-4">B.A.M.S, CCPT (Kerala)</p>
-                <p className="text-gray-600 italic mb-6 border-l-2 border-[#c5a059] pl-4">
+                <h3 className="text-2xl font-serif font-bold text-[#0f172a] mb-1">Dr. First Name</h3>
+                <p className="text-xs font-bold text-[#0284c7] uppercase tracking-wider mb-4">B.A.M.S, CCPT (Kerala)</p>
+                <p className="text-gray-600 italic mb-6 border-l-2 border-[#0284c7] pl-4">
                   "Expert in Pulse Diagnosis (Nadi Pariksha) and Panchakarma therapies for chronic lifestyle disorders."
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {['Lifestyle Disorders', 'Nadi Pariksha', 'Panchakarma'].map(tag => (
-                    <span key={tag} className="px-3 py-1 bg-[#1e3a29]/5 text-[#1e3a29] text-xs font-bold rounded-full">{tag}</span>
+                    <span key={tag} className="px-3 py-1 bg-[#0f172a]/5 text-[#0f172a] text-xs font-bold rounded-full">{tag}</span>
                   ))}
                 </div>
               </div>
             </div>
 
             {/* Doctor 2 */}
-            <div className="group relative bg-[#FDFBF7] rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-[#c5a059]/10 transition duration-500 border border-gray-100">
+            <div className="group relative bg-[#FDFBF7] rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-[#0284c7]/10 transition duration-500 border border-gray-100">
               <div className="aspect-[4/3] relative overflow-hidden">
                 <Image
-                  src="/rudradipal.jpg"
-                  alt="Dr. Dipal Raval"
+                  src="/doctor-placeholder-2.jpg"
+                  alt="Doctor 2"
                   fill
                   className="object-cover object-top transition duration-700 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#c5a059]/90 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 flex items-end p-8">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0284c7]/90 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 flex items-end p-8">
                   <p className="text-white/95 text-sm">
                     "Enhancing your natural beauty with the precision of modern science and the care of a doctor."
                   </p>
                 </div>
               </div>
               <div className="p-8 relative">
-                <div className="absolute -top-6 right-8 w-12 h-12 bg-[#c5a059] rounded-full flex items-center justify-center text-white shadow-lg">
+                <div className="absolute -top-6 right-8 w-12 h-12 bg-[#0284c7] rounded-full flex items-center justify-center text-white shadow-lg">
                   <Sparkles size={20} />
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-[#1e3a29] mb-1">Dr. Dipal Raval</h3>
-                <p className="text-xs font-bold text-[#c5a059] uppercase tracking-wider mb-4">B.H.M.S, P.G.D.C.C, P.G.D.C.T</p>
-                <p className="text-gray-600 italic mb-6 border-l-2 border-[#c5a059] pl-4">
+                <h3 className="text-2xl font-serif font-bold text-[#0f172a] mb-1">Dr. Second Name</h3>
+                <p className="text-xs font-bold text-[#0284c7] uppercase tracking-wider mb-4">B.H.M.S, P.G.D.C.C, P.G.D.C.T</p>
+                <p className="text-gray-600 italic mb-6 border-l-2 border-[#0284c7] pl-4">
                   "Specialist in Hair Repair, Skin Rejuvenation, and advanced Clinical Cosmetology treatments."
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {['Cosmetology', 'Skin & Hair'].map(tag => (
-                    <span key={tag} className="px-3 py-1 bg-[#c5a059]/10 text-[#c5a059] text-xs font-bold rounded-full">{tag}</span>
+                    <span key={tag} className="px-3 py-1 bg-[#0284c7]/10 text-[#0284c7] text-xs font-bold rounded-full">{tag}</span>
                   ))}
                 </div>
               </div>
@@ -398,8 +398,8 @@ export default function LandingPage() {
       <section id="gallery" className="py-20 bg-[#FDFBF7]">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="text-center mb-12">
-            <span className="text-[#c5a059] font-bold text-xs uppercase tracking-widest">Our Space</span>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-[#1e3a29] mt-3">Glimpse of Our Clinic</h2>
+            <span className="text-[#0284c7] font-bold text-xs uppercase tracking-widest">Our Space</span>
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-[#0f172a] mt-3">Glimpse of Our Clinic</h2>
             <p className="text-gray-500 mt-4 max-w-2xl mx-auto">
               Experience the serene and hygienic environment designed for your healing and relaxation.
             </p>
@@ -429,13 +429,13 @@ export default function LandingPage() {
       </section>
 
       {/* --- TREATMENTS SECTION --- */}
-      <section id="treatments" className="py-24 bg-[#1e3a29] text-white">
+      <section id="treatments" className="py-24 bg-[#0f172a] text-white">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
 
           {/* ✅ FIXED: Mobile Alignment for Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6 text-left">
             <div>
-              <span className="text-[#c5a059] font-bold text-xs uppercase tracking-widest">Our Services</span>
+              <span className="text-[#0284c7] font-bold text-xs uppercase tracking-widest">Our Services</span>
               <h2 className="text-3xl md:text-5xl font-serif font-bold mt-3">Signature Therapies</h2>
             </div>
             <p className="text-gray-300 max-w-md text-sm leading-relaxed">
@@ -448,14 +448,14 @@ export default function LandingPage() {
             {/* 1. Panchakarma Grid */}
             <div>
               <h3 className="text-2xl font-serif font-bold mb-8 flex items-center gap-3">
-                <Leaf className="text-[#c5a059]" /> Panchakarma & Detox
+                <Leaf className="text-[#0284c7]" /> Panchakarma & Detox
               </h3>
               <div className="grid md:grid-cols-4 gap-4">
                 {PANCHAKARMA_SERVICES.map((item) => (
                   <div
                     key={item.id}
                     onClick={() => openTreatment(item)}
-                    className="group relative h-72 rounded-xl overflow-hidden cursor-pointer bg-neutral-800 border border-white/10 hover:border-[#c5a059]/50 transition-all duration-300 hover:shadow-2xl"
+                    className="group relative h-72 rounded-xl overflow-hidden cursor-pointer bg-neutral-800 border border-white/10 hover:border-[#0284c7]/50 transition-all duration-300 hover:shadow-2xl"
                   >
                     {/* Image */}
                     <Image
@@ -469,9 +469,9 @@ export default function LandingPage() {
                     {/* Content Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f15] via-[#0f1f15]/50 to-transparent p-6 flex flex-col justify-end">
                       <h4 className="font-bold text-lg text-white mb-1">{item.name}</h4>
-                      <p className="text-xs text-[#c5a059] font-bold uppercase tracking-wider mb-2">{item.subtitle}</p>
+                      <p className="text-xs text-[#0284c7] font-bold uppercase tracking-wider mb-2">{item.subtitle}</p>
 
-                      <div className="flex items-center gap-2 text-xs font-medium text-white/80 bg-white/10 w-fit px-3 py-1.5 rounded-full mt-2 group-hover:bg-[#c5a059] group-hover:text-[#1e3a29] transition-colors">
+                      <div className="flex items-center gap-2 text-xs font-medium text-white/80 bg-white/10 w-fit px-3 py-1.5 rounded-full mt-2 group-hover:bg-[#0284c7] group-hover:text-[#0f172a] transition-colors">
                         <Eye size={14} /> Tap to View Details
                       </div>
                     </div>
@@ -483,14 +483,14 @@ export default function LandingPage() {
             {/* 2. Cosmetology Grid */}
             <div>
               <h3 className="text-2xl font-serif font-bold mb-8 flex items-center gap-3">
-                <Sparkles className="text-[#c5a059]" /> Cosmetology & PRP
+                <Sparkles className="text-[#0284c7]" /> Cosmetology & PRP
               </h3>
               <div className="grid md:grid-cols-3 gap-6">
                 {COSMETOLOGY_SERVICES.map((item) => (
                   <div
                     key={item.id}
                     onClick={() => openTreatment(item)}
-                    className="group relative h-72 rounded-xl overflow-hidden cursor-pointer bg-neutral-800 border border-white/10 hover:border-[#c5a059]/50 transition-all duration-300 hover:shadow-2xl"
+                    className="group relative h-72 rounded-xl overflow-hidden cursor-pointer bg-neutral-800 border border-white/10 hover:border-[#0284c7]/50 transition-all duration-300 hover:shadow-2xl"
                   >
                     {/* Image */}
                     <Image
@@ -504,9 +504,9 @@ export default function LandingPage() {
                     {/* Content Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f15] via-[#0f1f15]/50 to-transparent p-6 flex flex-col justify-end">
                       <h4 className="font-bold text-lg text-white mb-1">{item.name}</h4>
-                      <p className="text-xs text-[#c5a059] font-bold uppercase tracking-wider mb-2">{item.subtitle}</p>
+                      <p className="text-xs text-[#0284c7] font-bold uppercase tracking-wider mb-2">{item.subtitle}</p>
 
-                      <div className="flex items-center gap-2 text-xs font-medium text-white/80 bg-white/10 w-fit px-3 py-1.5 rounded-full mt-2 group-hover:bg-[#c5a059] group-hover:text-[#1e3a29] transition-colors">
+                      <div className="flex items-center gap-2 text-xs font-medium text-white/80 bg-white/10 w-fit px-3 py-1.5 rounded-full mt-2 group-hover:bg-[#0284c7] group-hover:text-[#0f172a] transition-colors">
                         <Eye size={14} /> Tap to View Details
                       </div>
                     </div>
@@ -520,12 +520,12 @@ export default function LandingPage() {
       </section>
 
       {/* --- FOOTER --- */}
-      <footer id="contact" className="bg-[#162b1e] text-white pt-20 pb-10 border-t border-white/10">
+      <footer id="contact" className="bg-[#020617] text-white pt-20 pb-10 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="grid md:grid-cols-3 gap-12 mb-16">
             {/* 1. Address Section */}
             <div className="flex gap-4 items-start">
-              <div className="w-10 h-10 bg-[#c5a059] rounded-full flex items-center justify-center shrink-0 text-[#1e3a29] mt-1">
+              <div className="w-10 h-10 bg-[#0284c7] rounded-full flex items-center justify-center shrink-0 text-[#0f172a] mt-1">
                 <MapPin size={20} />
               </div>
               <div>
@@ -543,7 +543,7 @@ export default function LandingPage() {
                   href="https://maps.app.goo.gl/2EpwqWbUEQkiwR6k7"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-[#c5a059] font-bold text-xs border border-[#c5a059] px-4 py-2 rounded-full hover:bg-[#c5a059] hover:text-[#1e3a29] transition"
+                  className="inline-flex items-center gap-2 text-[#0284c7] font-bold text-xs border border-[#0284c7] px-4 py-2 rounded-full hover:bg-[#0284c7] hover:text-[#0f172a] transition"
                 >
                   Get Directions <ArrowRight size={12} />
                 </a>
@@ -551,13 +551,13 @@ export default function LandingPage() {
             </div>
 
             <div className="flex gap-4 items-start">
-              <div className="w-10 h-10 bg-[#c5a059] rounded-full flex items-center justify-center shrink-0 text-[#1e3a29] mt-1">
+              <div className="w-10 h-10 bg-[#0284c7] rounded-full flex items-center justify-center shrink-0 text-[#0f172a] mt-1">
                 <Phone size={20} />
               </div>
               <div>
                 <h4 className="font-serif font-bold text-lg mb-2">Get in Touch</h4>
                 {/* ✅ UPDATE: WhatsApp Click-to-Chat */}
-                <p className="text-sm text-gray-400 hover:text-[#c5a059] transition flex items-center gap-2">
+                <p className="text-sm text-gray-400 hover:text-[#0284c7] transition flex items-center gap-2">
                   <a href="tel:+916352135799">+91 63521 35799</a>
                   <a
                     href="https://wa.me/916352135799"
@@ -568,23 +568,23 @@ export default function LandingPage() {
                     <MessageCircle size={10} /> WhatsApp
                   </a>
                 </p>
-                <p className="text-sm text-gray-400 mt-1 hover:text-[#c5a059] transition">
-                  <a href="mailto:rudraayurved5@gmail.com">rudraayurved5@gmail.com</a>
+                <p className="text-sm text-gray-400 mt-1 hover:text-[#0284c7] transition">
+                  <a href="mailto:contact@clinic.com">contact@clinic.com</a>
                 </p>
               </div>
             </div>
 
             <div className="flex gap-4 items-start">
-              <div className="w-10 h-10 bg-[#c5a059] rounded-full flex items-center justify-center shrink-0 text-[#1e3a29] mt-1">
+              <div className="w-10 h-10 bg-[#0284c7] rounded-full flex items-center justify-center shrink-0 text-[#0f172a] mt-1">
                 <Sparkles size={20} />
               </div>
               <div>
                 <h4 className="font-serif font-bold text-lg mb-2">Social Media</h4>
                 <div className="flex gap-4 mt-2">
-                  <a href="https://www.instagram.com/rudraayurved5/?hl=en" target="_blank" className="bg-white/10 p-2 rounded-lg hover:bg-[#c5a059] hover:text-[#1e3a29] transition">
+                  <a href="#" target="_blank" className="bg-white/10 p-2 rounded-lg hover:bg-[#0284c7] hover:text-[#0f172a] transition">
                     <Instagram size={20} />
                   </a>
-                  <a href="https://www.facebook.com/p/Rudra-Ayurved-61577961763044/" target="_blank" className="bg-white/10 p-2 rounded-lg hover:bg-[#c5a059] hover:text-[#1e3a29] transition">
+                  <a href="#" target="_blank" className="bg-white/10 p-2 rounded-lg hover:bg-[#0284c7] hover:text-[#0f172a] transition">
                     <Facebook size={20} />
                   </a>
                 </div>
@@ -593,10 +593,10 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
-            <p>© {new Date().getFullYear()} Rudra Ayurved. All Rights Reserved.</p>
+            <p>© {new Date().getFullYear()} Clinic Name. All Rights Reserved.</p>
             <div className="flex gap-6 mt-4 md:mt-0">
-              <Link href="#" className="hover:text-[#c5a059] transition">Privacy Policy</Link>
-              <Link href="#" className="hover:text-[#c5a059] transition">Terms of Service</Link>
+              <Link href="#" className="hover:text-[#0284c7] transition">Privacy Policy</Link>
+              <Link href="#" className="hover:text-[#0284c7] transition">Terms of Service</Link>
             </div>
           </div>
         </div>
@@ -608,7 +608,7 @@ export default function LandingPage() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl animate-in zoom-in duration-200">
             <div className="flex justify-between items-center mb-4">
               <div>
-                <h2 className="text-2xl font-serif font-bold text-[#1e3a29]">Request Consultation</h2>
+                <h2 className="text-2xl font-serif font-bold text-[#0f172a]">Request Consultation</h2>
                 <p className="text-xs text-gray-500">We will call you to confirm the time.</p>
               </div>
               <button onClick={() => setIsBookingModalOpen(false)} className="text-gray-400 hover:text-red-500 transition">
@@ -616,13 +616,13 @@ export default function LandingPage() {
               </button>
             </div>
 
-            <div className="bg-[#1e3a29]/5 border border-[#1e3a29]/10 rounded-lg p-3 mb-6 flex items-center gap-3">
-              <div className="bg-[#1e3a29] text-white p-2 rounded-full">
+            <div className="bg-[#0f172a]/5 border border-[#0f172a]/10 rounded-lg p-3 mb-6 flex items-center gap-3">
+              <div className="bg-[#0f172a] text-white p-2 rounded-full">
                 <Wallet size={16} />
               </div>
               <div>
                 <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Consultation Charge</p>
-                <p className="text-lg font-bold text-[#1e3a29]">₹500 <span className="text-xs font-normal text-gray-500">(Pay at Clinic)</span></p>
+                <p className="text-lg font-bold text-[#0f172a]">₹500 <span className="text-xs font-normal text-gray-500">(Pay at Clinic)</span></p>
               </div>
             </div>
 
@@ -631,7 +631,7 @@ export default function LandingPage() {
                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Full Name <span className="text-red-500">*</span></label>
                 <input
                   required
-                  className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] bg-white text-gray-900"
+                  className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7] bg-white text-gray-900"
                   placeholder="Enter your name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -642,7 +642,7 @@ export default function LandingPage() {
                 <input
                   required
                   type="tel"
-                  className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] bg-white text-gray-900"
+                  className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7] bg-white text-gray-900"
                   placeholder="e.g. 9876543210"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -651,7 +651,7 @@ export default function LandingPage() {
               <div>
                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Symptoms / Purpose</label>
                 <textarea
-                  className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] resize-none h-24 bg-white text-gray-900"
+                  className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7] resize-none h-24 bg-white text-gray-900"
                   placeholder="Briefly describe your issue..."
                   value={formData.symptoms}
                   onChange={(e) => setFormData({ ...formData, symptoms: e.target.value })}
@@ -660,7 +660,7 @@ export default function LandingPage() {
 
               <button
                 disabled={loading}
-                className="w-full bg-[#1e3a29] text-white font-bold py-3.5 rounded-lg hover:bg-[#162b1e] transition flex items-center justify-center gap-2 mt-2"
+                className="w-full bg-[#0f172a] text-white font-bold py-3.5 rounded-lg hover:bg-[#020617] transition flex items-center justify-center gap-2 mt-2"
               >
                 {loading ? <Loader2 className="animate-spin" size={20} /> : "Submit Request"}
               </button>
@@ -693,7 +693,7 @@ export default function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-8">
                   <h2 className="text-3xl md:text-4xl font-serif font-bold text-white">{selectedTreatment.name}</h2>
-                  <p className="text-[#c5a059] uppercase tracking-widest font-bold mt-2 text-sm">{selectedTreatment.subtitle}</p>
+                  <p className="text-[#0284c7] uppercase tracking-widest font-bold mt-2 text-sm">{selectedTreatment.subtitle}</p>
                 </div>
               </div>
 
@@ -703,7 +703,7 @@ export default function LandingPage() {
                   <div
                     key={i}
                     onClick={() => setActiveImage(img)} // 👈 Updated click handler
-                    className={`w-12 h-12 md:w-16 md:h-16 relative rounded-lg border-2 overflow-hidden cursor-pointer transition ${activeImage === img ? 'border-[#c5a059] scale-105' : 'border-white/50 hover:border-white'}`}
+                    className={`w-12 h-12 md:w-16 md:h-16 relative rounded-lg border-2 overflow-hidden cursor-pointer transition ${activeImage === img ? 'border-[#0284c7] scale-105' : 'border-white/50 hover:border-white'}`}
                   >
                     <Image src={img} alt="Gallery" fill className="object-cover" />
                   </div>
@@ -714,24 +714,24 @@ export default function LandingPage() {
             {/* Right: Details */}
             <div className="w-full md:w-1/2 p-6 md:p-10 overflow-y-auto bg-white flex flex-col">
               <div className="flex-1">
-                <div className="flex items-center gap-2 text-[#c5a059] mb-4">
+                <div className="flex items-center gap-2 text-[#0284c7] mb-4">
                   <Info size={18} />
                   <span className="text-xs font-bold uppercase tracking-widest">Therapy Details</span>
                 </div>
 
-                <p className="text-lg text-[#1e3a29] leading-relaxed mb-6 font-medium">
+                <p className="text-lg text-[#0f172a] leading-relaxed mb-6 font-medium">
                   {selectedTreatment.detail}
                 </p>
 
                 {selectedTreatment.benefits && (
                   <div className="mb-8">
                     <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <CheckCircle2 size={18} className="text-[#c5a059]" /> Key Benefits
+                      <CheckCircle2 size={18} className="text-[#0284c7]" /> Key Benefits
                     </h4>
                     <ul className="grid grid-cols-1 gap-3">
                       {selectedTreatment.benefits.map((benefit: string, i: number) => (
                         <li key={i} className="text-gray-600 text-sm flex items-start gap-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                          <span className="w-1.5 h-1.5 bg-[#1e3a29] rounded-full mt-1.5 shrink-0"></span>
+                          <span className="w-1.5 h-1.5 bg-[#0f172a] rounded-full mt-1.5 shrink-0"></span>
                           {benefit}
                         </li>
                       ))}
@@ -743,7 +743,7 @@ export default function LandingPage() {
               <div className="pt-6 border-t border-gray-100 mt-6">
                 <button
                   onClick={handleBookFromTreatment}
-                  className="w-full bg-[#1e3a29] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#162b1e] transition flex items-center justify-center gap-2 shadow-lg shadow-[#1e3a29]/20"
+                  className="w-full bg-[#0f172a] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#020617] transition flex items-center justify-center gap-2 shadow-lg shadow-[#0f172a]/20"
                 >
                   <Calendar size={20} /> Book This Therapy
                 </button>

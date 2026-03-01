@@ -1,5 +1,6 @@
 {
     "geminicodeassist.agentYoloMode": true,
     "geminicodeassist.enableTelemetry": false,
-    "geminicodeassist.agentDebugMode": true
+    "geminicodeassist.agentDebugMode": true,
+    "css.lint.unknownAtRules": "ignore"
 }

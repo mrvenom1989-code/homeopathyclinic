@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const secretKey = process.env.SESSION_SECRET || "rudra-ayurved-secret-key";
+const secretKey = process.env.SESSION_SECRET || "clinic-secret-key";
 const key = new TextEncoder().encode(secretKey);
 
 // --- 1. CORE CRYPTO FUNCTIONS ---
@@ -37,9 +37,9 @@ export async function createSession(payload: any) {
   const session = await encrypt({ ...payload, expires });
 
   const cookieStore = await cookies();
-  cookieStore.set("session", session, { 
-    expires, 
-    httpOnly: true, 
+  cookieStore.set("session", session, {
+    expires,
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",

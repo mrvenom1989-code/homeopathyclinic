@@ -8,11 +8,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        rudra: {
-          green: '#1e3a29',
-          gold: '#c5a059',
-          cream: '#f4f4f0',
-          light: '#e8e8e3',
+        clinic: {
+          green: '#0f172a',
+          gold: '#0284c7',
+          cream: '#f8fafc',
+          light: '#f1f5f9',
         }
       },
       fontFamily: {

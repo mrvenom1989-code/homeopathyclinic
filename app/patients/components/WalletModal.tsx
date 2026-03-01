@@ -24,14 +24,14 @@ export default function WalletModal({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 animate-in zoom-in-95">
-                <h3 className="text-lg font-bold text-[#1e3a29] mb-4 flex items-center gap-2"><Wallet /> Manage Wallet</h3>
+                <h3 className="text-lg font-bold text-[#0f172a] mb-4 flex items-center gap-2"><Wallet /> Manage Wallet</h3>
                 <p className="text-sm text-gray-500 mb-4">Managing balance for <span className="font-bold text-black">{patientName}</span></p>
 
                 <div className="space-y-4">
                     <div>
                         <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Transaction Type</label>
                         <select
-                            className="w-full p-2 border rounded bg-gray-50 focus:ring-2 focus:ring-[#c5a059]"
+                            className="w-full p-2 border rounded bg-gray-50 focus:ring-2 focus:ring-[#0284c7]"
                             value={walletType}
                             onChange={(e) => setWalletType(e.target.value as "CREDIT" | "DUE")}
                         >
@@ -46,7 +46,7 @@ export default function WalletModal({
                             type="number"
                             autoFocus
                             placeholder="Enter Amount"
-                            className="w-full p-3 border rounded-lg text-lg font-bold outline-none focus:ring-2 focus:ring-[#c5a059]"
+                            className="w-full p-3 border rounded-lg text-lg font-bold outline-none focus:ring-2 focus:ring-[#0284c7]"
                             value={walletAmount}
                             onChange={(e) => setWalletAmount(e.target.value)}
                         />

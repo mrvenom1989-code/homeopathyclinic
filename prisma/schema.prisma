@@ -5,8 +5,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // 1. DOCTOR / USER
@@ -28,9 +29,9 @@ model Patient {
   age            Int?
   gender         String?
   bloodGroup     String?
-  prakriti       String?
-  initialWeight String?
-  currentWeight String?
+  height         String?  // e.g. 5'10" or 175cm
+  initialWeight  String?
+  currentWeight  String?
   history        String?  
 
   // ✅ NEW FIELDS
@@ -98,6 +99,17 @@ model Consultation {
   doctorName     String
   reportUrl      String?   
 
+  // ✅ VITALS 
+  bloodPressure   String?
+  pulse           String?
+  temperature     String?
+  respiratoryRate String?
+
+  // ✅ HOMEOPATHY CASE TAKING / FOLLOW-UP
+  miasms                  String?
+  aggravationAmelioration String?
+  repertoryRubrics        String? // JSON string containing tagged rubrics   
+
   // ✅ FINANCIALS 
   discount       Float     @default(0.0)
   
@@ -119,6 +131,8 @@ model Medicine {
   id          String   @id @default(cuid())
   name        String   @unique
   type        String   
+  potency     String?  // e.g. Q, 6c, 30c, 200c, 1M, 10M
+  vehicle     String?  // e.g. Globules, Distilled Water, Sugar of Milk, Pills
   stock       Int      @default(0)
   price       Float    @default(0)
   
