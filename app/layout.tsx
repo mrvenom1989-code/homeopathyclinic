@@ -6,8 +6,17 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
 
 export const metadata: Metadata = {
-  title: 'Clinic Management System',
-  description: 'Premium Healthcare',
+  title: 'Dr. Mayank Raval | Advanced Homeopathy Clinic',
+  description: 'Experience safe, natural, and effective homeopathy treatments for hair fall, skin disorders, respiratory issues, and chronic diseases by Dr. Mayank Raval.',
+  keywords: 'Homeopathy doctor near me, Nearest homeopathic doctor, Homeopathy treatment, Homeopathic doctor, Homeopathic specialist doctor, Homeopathy clinic, Nearby homeopathy clinic, Homeopathy treatment near me, Homeopathy specialist',
+  openGraph: {
+    title: 'Dr. Mayank Raval | Advanced Homeopathy Clinic',
+    description: 'Expert Homeopathic care for 100+ ailments including hair loss, skin conditions, and respiratory issues.',
+    url: 'https://drmayankraval.com', // Placeholder URL
+    siteName: 'Dr. Mayank Raval Homeopathy',
+    locale: 'en_IN',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({

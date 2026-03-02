@@ -6,53 +6,71 @@ import Image from "next/image";
 import {
   ArrowRight, Phone, MapPin, Instagram, Facebook,
   Sparkles, Leaf, Calendar, CheckCircle2, Loader2, X, Wallet,
-  Info, MessageCircle, Mail, Clock, ShieldCheck, Activity, Stethoscope, Heart, Droplets
+  Info, MessageCircle, Mail, Clock, ShieldCheck, Activity, Stethoscope, Heart, Droplets,
+  Smile, Wind, User, Brain
 } from "lucide-react";
 import { createConsultationRequest } from "@/app/actions";
 
-// --- DATA: HOMEOPATHIC SERVICES ---
-const HOMEOPATHIC_SERVICES = [
-  {
-    id: 'constitutional',
-    name: "Constitutional Homeopathy",
-    subtitle: "Deep Healing",
-    desc: "Treating the individual as a whole.",
-    detail: "A highly individualized treatment approach that looks at your physical, mental, and emotional symptoms to find a single remedy that covers your entire being.",
-    benefits: ["Treats Root Cause", "Boosts Immunity", "Long-lasting Results", "No Side Effects"],
-    icon: Sparkles
-  },
-  {
-    id: 'chronic',
-    name: "Chronic Disease Management",
-    subtitle: "Long-term Relief",
-    desc: "Managing severe and prolonged ailments naturally.",
-    detail: "Specialized homeopathic protocols to manage chronic conditions like arthritis, asthma, skin disorders, and autoimmune diseases safely and effectively.",
-    benefits: ["Safe for all ages", "Reduces Dependency on Allopathy", "Improves Quality of Life", "Holistic Approach"],
-    icon: Activity
-  },
-  {
-    id: 'acute',
-    name: "Acute Care",
-    subtitle: "Rapid Relief",
-    desc: "Fast-acting remedies for sudden illnesses.",
-    detail: "Quick and effective homeopathic medicines for acute conditions like fevers, colds, coughs, sudden allergies, and minor injuries.",
-    benefits: ["Fast Action", "Gentle on the Stomach", "Safe for Children", "Prevents Recurrence"],
-    icon: Heart
-  },
-  {
-    id: 'pediatric',
-    name: "Pediatric Care",
-    subtitle: "Child Health",
-    desc: "Gentle and sweet pills for children.",
-    detail: "Homeopathy is extremely safe and well-accepted by children. It builds their natural immunity to fight recurrent infections, tonsillitis, allergies, and behavioral issues.",
-    benefits: ["Sweet Tasting Pills", "Builds Natural Immunity", "No Harsh Chemicals", "Treats Behavioral Issues"],
-    icon: Droplets
-  }
+
+
+const AILMENTS_CATEGORIES = [
+  { name: "Hair Loss", icon: Sparkles },
+  { name: "Skin Disorders", icon: Smile },
+  { name: "Respiratory", icon: Wind },
+  { name: "Child Health", icon: Heart },
+  { name: "Women Health", icon: User },
+  { name: "Weight Management", icon: Activity },
+  { name: "Diabetes", icon: Droplets },
+  { name: "Mental Health", icon: Brain },
 ];
+
+const TREATMENTS_TAB = [
+  "Hair Fall", "Alopecia", "Psoriasis", "Vitiligo", "Eczema", "Acne", "PCOS", "Infertility", "Respiratory", "Migraine", "Thyroid", "Diabetes", "Arthritis", "Mental Health", "Depression", "Child Health", "Skin Treatment", "Allergies", "Immunity", "Tonsils"
+];
+
+const AILMENT_IMAGES: Record<string, string> = {
+  "Hair Fall": "/hair_care_1772479417900.png",
+  "Alopecia": "/hair_care_1772479417900.png",
+  "Psoriasis": "/skin_care_1772479434003.png",
+  "Vitiligo": "/skin_care_1772479434003.png",
+  "Eczema": "/skin_care_1772479434003.png",
+  "Acne": "/skin_care_1772479434003.png",
+  "Skin Treatment": "/skin_care_1772479434003.png",
+  "PCOS": "/womens_health_1772479448868.png",
+  "Infertility": "/womens_health_1772479448868.png",
+  "Thyroid": "/womens_health_1772479448868.png",
+  "Diabetes": "/womens_health_1772479448868.png",
+  "Respiratory": "/respiratory_1772479467172.png",
+  "Allergies": "/respiratory_1772479467172.png",
+  "Immunity": "/respiratory_1772479467172.png",
+  "Tonsils": "/respiratory_1772479467172.png",
+  "Migraine": "/mental_health_1772479483594.png",
+  "Mental Health": "/mental_health_1772479483594.png",
+  "Depression": "/mental_health_1772479483594.png",
+  "Arthritis": "/joint_care_1772479498336.png",
+  "Child Health": "/child_care_1772479512977.png"
+};
+
+const TREATMENT_CONTENT: Record<string, any> = {
+  "Hair Fall": {
+    desc: "Hair fall affects nearly 1 in 3 adults in India, often beginning as hair shedding, hair thinning, or a visible scalp. When left untreated, it can quietly impact your confidence, appearance, and overall well-being.",
+    points: [
+      "At Dr. Mayank Raval's clinic, Dr. Mayank Raval provides personalised hair fall treatment focusing on the root cause.",
+      "All our hair treatments are safe, natural & side-effect-free, and designed to reduce hair fall, strengthen hair roots, and support long-term results, ensuring natural hair regrowth."
+    ]
+  },
+  "default": {
+    desc: "Homeopathy provides safe and effective treatments for a wide range of acute and chronic conditions. By addressing the root cause, it ensures lasting relief without harmful side effects.",
+    points: [
+      "Dr. Mayank Raval conducts a detailed consultation to understand your unique symptoms, medical history, and constitution.",
+      "He prescribes natural, non-toxic medicines tailored specifically to your body's needs to stimulate its innate healing capacity."
+    ]
+  }
+};
 
 export default function LandingPage() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [selectedTreatment, setSelectedTreatment] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState("Hair Fall");
 
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "", symptoms: "" });
@@ -72,16 +90,6 @@ export default function LandingPage() {
     } else {
       alert("Error submitting request. Please try again.");
     }
-  };
-
-  const handleBookFromTreatment = () => {
-    setFormData(prev => ({ ...prev, symptoms: `Inquiry about: ${selectedTreatment.name}` }));
-    setSelectedTreatment(null);
-    setIsBookingModalOpen(true);
-  };
-
-  const openTreatment = (item: any) => {
-    setSelectedTreatment(item);
   };
 
   return (
@@ -117,7 +125,6 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-8">
             <Link href="#about" className="hidden md:block text-sm font-semibold text-emerald-800 hover:text-amber-500 transition">About Doctor</Link>
-            <Link href="#services" className="hidden md:block text-sm font-semibold text-emerald-800 hover:text-amber-500 transition">Services</Link>
             <Link href="#contact" className="hidden md:block text-sm font-semibold text-emerald-800 hover:text-amber-500 transition">Contact</Link>
 
             <Link href="/login" className="bg-slate-100 text-teal-800 px-5 py-2.5 rounded-full text-sm font-bold hover:bg-slate-200 transition flex items-center gap-2">
@@ -237,42 +244,72 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* --- SERVICES SECTION --- */}
-      <section id="services" className="py-24 bg-[#f4f7f6]">
+
+
+      {/* --- AILMENTS WE SPECIALIZE IN --- */}
+      <section className="py-20 bg-white border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-
-          <div className="text-center mb-20 max-w-2xl mx-auto">
-            <span className="text-amber-500 font-bold text-sm uppercase tracking-widest mb-2 block">Our Expertise</span>
-            <h2 className="text-3xl md:text-5xl font-bold text-teal-950 mb-6">Comprehensive Homeopathic Care</h2>
-            <p className="text-emerald-800 text-lg">
-              Gentle, effective, and tailored remedies designed to trigger your body's innate healing response.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {HOMEOPATHIC_SERVICES.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => openTreatment(item)}
-                className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-xl hover:border-amber-100 cursor-pointer transition-all duration-300 group flex flex-col h-full"
-              >
-                <div className="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 mb-6 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300">
-                  <item.icon size={28} />
+          <h2 className="text-3xl font-bold text-teal-950 mb-12 text-center md:text-left">We Specialise in 100+ Ailments</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {AILMENTS_CATEGORIES.map((cat, i) => (
+              <div key={i} className="flex flex-col md:flex-row items-center gap-4 group cursor-pointer p-4 rounded-xl hover:bg-[#f4f7f6] transition">
+                <div className="w-12 h-12 bg-blue-50 text-[#13382f] rounded-full flex items-center justify-center shrink-0 group-hover:bg-[#13382f] group-hover:text-white transition">
+                  <cat.icon size={24} strokeWidth={1.5} />
                 </div>
-
-                <h3 className="text-xl font-bold text-teal-950 mb-2">{item.name}</h3>
-                <p className="text-sm text-amber-500 font-semibold mb-4">{item.subtitle}</p>
-                <p className="text-emerald-800 text-sm leading-relaxed flex-grow">
-                  {item.desc}
-                </p>
-
-                <div className="mt-8 flex items-center gap-2 text-sm font-bold text-slate-400 group-hover:text-amber-500 transition-colors">
-                  Learn more <ArrowRight size={16} />
-                </div>
+                <span className="font-semibold text-emerald-900 text-center md:text-left">{cat.name}</span>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
+      {/* --- TREATMENTS TABS SECTION --- */}
+      <section className="py-20 bg-[#f4f7f6] border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <h2 className="text-3xl font-bold text-teal-950 mb-10 text-center md:text-left">Ailments We Treat with Homeopathy</h2>
+
+          {/* Tabs */}
+          <div className="flex flex-wrap gap-2 pb-4 mb-10 border-b border-slate-200">
+            {TREATMENTS_TAB.map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${activeTab === tab ? 'bg-[#13382f] text-white shadow-md' : 'text-emerald-800 hover:bg-slate-200 bg-white border border-slate-100'}`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-slate-100 grid md:grid-cols-2 gap-12 items-center">
+            {/* Image Placeholder area */}
+            <div className="bg-teal-50 rounded-2xl aspect-square md:aspect-[4/3] flex items-center justify-center relative overflow-hidden group">
+              <Image src={AILMENT_IMAGES[activeTab] || "/hero-bg.jpg"} alt={activeTab} fill className="object-cover group-hover:scale-105 transition duration-700" sizes="(max-width: 768px) 100vw, 50vw" />
+              <div className="absolute inset-x-0 bottom-0 py-6 bg-gradient-to-t from-black/70 to-transparent flex justify-center text-white font-bold text-xl z-10">{activeTab} Treatment</div>
+            </div>
+
+            {/* Content area */}
+            <div>
+              <h3 className="text-3xl font-bold text-teal-950 mb-4">{activeTab}</h3>
+              <p className="text-emerald-800 leading-relaxed mb-8">
+                {TREATMENT_CONTENT[activeTab]?.desc || TREATMENT_CONTENT["default"].desc}
+              </p>
+
+              <h4 className="font-bold text-teal-950 text-xl mb-4">How Can We Help You?</h4>
+              <ul className="space-y-4">
+                {(TREATMENT_CONTENT[activeTab]?.points || TREATMENT_CONTENT["default"].points).map((pt: string, i: number) => (
+                  <li key={i} className="flex gap-3 text-emerald-800 leading-relaxed">
+                    <span className="w-1.5 h-1.5 bg-amber-500 rounded-full shrink-0 mt-2"></span>
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <button onClick={() => setIsBookingModalOpen(true)} className="mt-10 bg-amber-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-amber-600 transition shadow-lg shadow-amber-500/20">
+                Book Consultation
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -359,6 +396,23 @@ export default function LandingPage() {
 
           </div>
 
+          {/* SEO LINKS */}
+          <div className="border-t border-teal-800/50 mt-16 pt-8 pb-4 text-center">
+            <p className="text-[#aabcb6] text-xs leading-[2.5] max-w-5xl mx-auto flex flex-wrap justify-center gap-x-3">
+              <Link href="#" className="hover:text-white transition">Homeopathy doctor near me</Link> |
+              <Link href="#" className="hover:text-white transition">Nearest homeopathic doctor</Link> |
+              <Link href="#" className="hover:text-white transition">Homeopathy treatment</Link> |
+              <Link href="#" className="hover:text-white transition">Homeopathic doctor</Link> |
+              <Link href="#" className="hover:text-white transition">Homeopathic specialist doctor</Link> |
+              <Link href="#" className="hover:text-white transition">Homeopathy clinic</Link> |
+              <Link href="#" className="hover:text-white transition">Nearby homeopathy clinic</Link> |
+              <Link href="#" className="hover:text-white transition">Homeopathy clinic near me</Link> |
+              <Link href="#" className="hover:text-white transition">Homeopathy treatment near me</Link> |
+              <Link href="#" className="hover:text-white transition">Homeopathy doctor</Link> |
+              <Link href="#" className="hover:text-white transition">Homeopathy specialist</Link>
+            </p>
+          </div>
+
           <div className="border-t border-teal-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-emerald-700">
             <p>© {new Date().getFullYear()} Dr. Mayank Raval. All Rights Reserved.</p>
             <div className="flex gap-6 mt-4 md:mt-0">
@@ -436,66 +490,7 @@ export default function LandingPage() {
         </div>
       )}
 
-      {/* --- SERVICE DETAILS MODAL --- */}
-      {selectedTreatment && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#13382f]/40 backdrop-blur-md p-4 animate-in fade-in duration-300">
-          <div className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 relative border border-slate-100">
 
-            {/* Header/Banner colored segment */}
-            <div className="bg-[#f4f7f6] border-b border-slate-100 p-8 pb-10 relative overflow-hidden">
-              <div className="absolute right-0 top-0 w-64 h-64 bg-amber-100 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-
-              <button
-                onClick={() => setSelectedTreatment(null)}
-                className="absolute top-6 right-6 z-20 bg-white hover:bg-slate-100 text-slate-400 hover:text-emerald-800 p-2 rounded-full transition-all border border-slate-200 shadow-sm"
-              >
-                <X size={20} />
-              </button>
-
-              <div className="relative z-10 flex items-start gap-6">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-amber-500 shadow-sm border border-slate-100 shrink-0">
-                  <selectedTreatment.icon size={32} />
-                </div>
-                <div>
-                  <h2 className="text-3xl font-bold text-teal-950">{selectedTreatment.name}</h2>
-                  <p className="text-amber-500 font-bold uppercase tracking-widest text-xs mt-2">{selectedTreatment.subtitle}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Details Body */}
-            <div className="p-8">
-              <p className="text-lg text-teal-800 leading-relaxed mb-8 font-medium">
-                {selectedTreatment.detail}
-              </p>
-
-              {selectedTreatment.benefits && (
-                <div className="mb-10 bg-[#f4f7f6] p-6 rounded-2xl border border-slate-100">
-                  <h4 className="font-bold text-teal-950 mb-4 flex items-center gap-2">
-                    <CheckCircle2 size={20} className="text-emerald-500" /> Key Benefits
-                  </h4>
-                  <ul className="grid sm:grid-cols-2 gap-4">
-                    {selectedTreatment.benefits.map((benefit: string, i: number) => (
-                      <li key={i} className="text-teal-800 text-sm flex items-center gap-3 font-medium">
-                        <span className="w-1.5 h-1.5 bg-amber-500 rounded-full shrink-0"></span>
-                        {benefit}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <button
-                onClick={handleBookFromTreatment}
-                className="w-full bg-amber-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-amber-600 transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20"
-              >
-                <Calendar size={20} /> Request Therapy Consultation
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
 
     </div>
   );
