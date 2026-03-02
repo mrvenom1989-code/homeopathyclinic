@@ -407,7 +407,7 @@ export async function savePrescription(patientId: string, visitData: any, consul
           type: "Walk-in",
           patientName: p?.name || "Unknown",
           phone: p?.phone || "",
-          doctor: visitData.doctorName || "Dr. Chirag Raval",
+          doctor: visitData.doctorName || "Dr. Mayank Raval",
           status: "COMPLETED",
           patientId: patientId,
           fee: 500,
@@ -463,7 +463,7 @@ export async function savePrescription(patientId: string, visitData: any, consul
           data: {
             patientId,
             appointmentId: finalAppointmentId || null,
-            doctorName: visitData.doctorName || "Dr. Chirag Raval",
+            doctorName: visitData.doctorName || "Dr. Mayank Raval",
             diagnosis: visitData.diagnosis, symptoms: visitData.symptoms || "Consultation", notes: visitData.notes,
             discount: pharmacyDiscount,
             paidAmount: paidAmount,

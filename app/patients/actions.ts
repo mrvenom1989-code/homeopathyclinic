@@ -295,7 +295,7 @@ export async function savePrescription(patientId: string, visitData: any, consul
 
       // ✅ FIX: Use smart slot finding instead of hardcoded 10:00 AM
       const { startTime, endTime } = await findNextAvailableSlot(
-        visitData.doctorName || "Dr. Chirag Raval",
+        visitData.doctorName || "Dr. Mayank Raval",
         today
       );
 
@@ -308,7 +308,7 @@ export async function savePrescription(patientId: string, visitData: any, consul
           type: "Walk-in",
           patientName: p?.name || "Unknown",
           phone: p?.phone || "",
-          doctor: visitData.doctorName || "Dr. Chirag Raval",
+          doctor: visitData.doctorName || "Dr. Mayank Raval",
           status: "COMPLETED",
           patientId: patientId,
           fee: 500,
@@ -368,7 +368,7 @@ export async function savePrescription(patientId: string, visitData: any, consul
         const newConsult = await tx.consultation.create({
           data: {
             patientId,
-            doctorName: "Dr. Chirag Raval",
+            doctorName: "Dr. Mayank Raval",
             symptoms: visitData.diagnosis,
             diagnosis: visitData.diagnosis,
             notes: visitData.notes,

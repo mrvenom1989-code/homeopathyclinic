@@ -215,7 +215,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
       patientName: patientNameForBill,
       patientId: consult.patient?.readableId || consult.patient?.id.slice(0, 6) || "GUEST",
       appointmentId: consult.appointment?.readableId || "WALK-IN",
-      doctorName: consult.doctorName || "Dr. Chirag Raval",
+      doctorName: consult.doctorName || "Dr. Mayank Raval",
       items
     });
   };
@@ -309,7 +309,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
       patientName: patientNameForBill,
       patientId: consult.patient?.readableId || consult.patient?.id.slice(0, 6) || "GUEST",
       appointmentId: consult.appointment?.readableId || "WALK-IN",
-      doctorName: consult.doctorName || "Dr. Chirag Raval",
+      doctorName: consult.doctorName || "Dr. Mayank Raval",
       items
     });
   };

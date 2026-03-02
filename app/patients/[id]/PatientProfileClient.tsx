@@ -310,7 +310,7 @@ export default function PatientProfileClient({
             diagnosis: consultationType === 'REGULAR' ? visitNote : "Panchkarma Procedure",
             notes: panchkarmaNote,
             prescriptions: currentPrescriptions,
-            doctorName: "Dr. Chirag Raval",
+            doctorName: "Dr. Mayank Raval",
 
             appointmentId: selectedAppointmentId,
             appointmentDiscount: calculatedApptDiscount,
@@ -458,7 +458,7 @@ export default function PatientProfileClient({
             patientName: cleanName(patient.name),
             patientId: patient.readableId || patient.id.slice(0, 6),
             appointmentId: visit.appointmentId || "WALK-IN",
-            doctorName: visit.doctorName || "Dr. Chirag Raval",
+            doctorName: visit.doctorName || "Dr. Mayank Raval",
             items: items
         });
     };
