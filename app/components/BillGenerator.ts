@@ -16,6 +16,7 @@ interface BillData {
   appointmentId: string;
   doctorName: string;
   items: BillItem[];
+  isPrescription?: boolean;
 }
 
 interface jsPDFWithAutoTable extends jsPDF {
@@ -42,8 +43,8 @@ export const generateBill = async (data: BillData) => {
   // A. Logo (Top Left)
   try {
     const logo = await loadImage("/logo.jpg");
-    // Add image: x, y, width, height (Adjusted width for landscape logo)
-    doc.addImage(logo, "JPEG", 10, 10, 40, 20);
+    // Add image: x, y, width, height. Making it 25x25 for a professional square look.
+    doc.addImage(logo, "JPEG", 10, 10, 25, 25);
   } catch {
     console.warn("Logo not found");
   }
@@ -90,34 +91,51 @@ export const generateBill = async (data: BillData) => {
 
   // --- 3. ITEMS TABLE ---
 
-  const tableBody = data.items.map((item, index) => [
-    index + 1,
-    item.name,
-    item.dosage || "-",
-    item.qty,
-    `Rs. ${item.amount}`
-  ]);
+  const isRx = data.isPrescription;
+
+  const tableBody = data.items.map((item, index) => {
+    const row: any[] = [
+      index + 1,
+      item.name,
+      item.dosage || "-"
+    ];
+    if (!isRx) {
+      row.push(item.qty);
+      row.push(`Rs. ${item.amount}`);
+    }
+    return row;
+  });
 
   // Total Row
-  const total = data.items.reduce((sum, item) => sum + item.amount, 0);
-  tableBody.push(["", "TOTAL", "", "", `Rs. ${total}`]);
+  if (!isRx) {
+    const total = data.items.reduce((sum, item) => sum + item.amount, 0);
+    tableBody.push(["", "TOTAL", "", "", `Rs. ${total}`]);
+  }
+
+  const head = isRx
+    ? [['NO', 'PRODUCT', 'DOSAGE / INFO']]
+    : [['NO', 'PRODUCT', 'DOSAGE / INFO', 'QTY', 'AMOUNT']];
 
   autoTable(doc, {
     startY: 70,
-    // ✅ Updated Header to match Pharmacy UI
-    head: [['NO', 'PRODUCT', 'DOSAGE / INFO', 'QTY', 'AMOUNT']],
+    head: head,
     body: tableBody,
     theme: 'grid',
     headStyles: { fillColor: [30, 58, 41], textColor: 255 }, // Dark Green
     styles: { fontSize: 10, cellPadding: 3 },
-    columnStyles: {
-      0: { cellWidth: 15, halign: 'center' }, // No
-      1: { cellWidth: 'auto' },               // Product
-      // ✅ Decreased font size for Dosage column to fit content better
-      2: { cellWidth: 45, halign: 'center', fontSize: 8 },
-      3: { cellWidth: 20, halign: 'center' }, // Qty
-      4: { cellWidth: 30, halign: 'right' }   // Amount
-    }
+    columnStyles: isRx
+      ? {
+        0: { cellWidth: 15, halign: 'center' }, // No
+        1: { cellWidth: 'auto' },               // Product
+        2: { cellWidth: 90, halign: 'center', fontSize: 8 }
+      }
+      : {
+        0: { cellWidth: 15, halign: 'center' }, // No
+        1: { cellWidth: 'auto' },               // Product
+        2: { cellWidth: 45, halign: 'center', fontSize: 8 },
+        3: { cellWidth: 20, halign: 'center' }, // Qty
+        4: { cellWidth: 30, halign: 'right' }   // Amount
+      }
   });
 
   // --- 4. FOOTER & SIGNATURE ---
@@ -159,5 +177,6 @@ export const generateBill = async (data: BillData) => {
   doc.text("lifetronhomeopathyamd@gmail.com", 105, pageHeight - 10, { align: "center" });
 
   // Save
-  doc.save(`Bill_${data.patientName}_${data.billNo}.pdf`);
+  const prefix = data.isPrescription ? "Prescription" : "Bill";
+  doc.save(`${prefix}_${data.patientName}_${data.billNo}.pdf`);
 };

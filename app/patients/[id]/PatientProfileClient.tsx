@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import StaffHeader from "@/app/components/StaffHeader";
 import { generateBill } from "@/app/components/BillGenerator";
+import { generateSickCertificate, generateAirportCertificate } from "@/app/components/CertificateGenerator";
 import {
     User, Phone, Calendar, Edit2, Search,
     Plus, FileText, Trash2, Stethoscope, Loader2, X,
@@ -436,30 +437,29 @@ export default function PatientProfileClient({
         }
     };
 
-    const handlePrintReceipt = (visit: any) => {
+    const handlePrintSickCertificate = (visit: any) => {
+        generateSickCertificate({
+            patientName: cleanName(patient.name),
+            patientAge: patient.age,
+            date: new Date(visit.date).toLocaleDateString(),
+            diagnosis: visit.diagnosis || 'Medical Condition',
+            doctorName: visit.doctorName || "Dr. Mayank Raval",
+        });
+    };
+
+    const handlePrintAirportCertificate = (visit: any) => {
         const items = visit.prescriptions.map((p: any) => ({
             name: `${p.medicineName} ${p.unit !== '-' ? `(${p.unit})` : ''}`,
-            qty: 1,
-            amount: p.price || 0
+            dosage: p.dosage || "-",
+            qty: p.duration || "-"
         }));
 
-        const fee = 500 - (visit.appointmentDiscount || 0);
-
-        if (fee > 0) items.unshift({ name: "Consultation Charge", qty: 1, amount: fee });
-        else items.unshift({ name: "Consultation (Free)", qty: 1, amount: 0 });
-
-        if (visit.pharmacyDiscount > 0) items.push({ name: "PHARMACY DISCOUNT", qty: 1, amount: -visit.pharmacyDiscount });
-
-        if (visit.paidAmount > 0) items.push({ name: `PAID (${visit.paymentMode})`, qty: 1, amount: -visit.paidAmount });
-
-        generateBill({
-            billNo: `RCPT-${visit.id.slice(-4).toUpperCase()}`,
-            date: new Date(visit.date).toLocaleDateString(),
+        generateAirportCertificate({
             patientName: cleanName(patient.name),
-            patientId: patient.readableId || patient.id.slice(0, 6),
-            appointmentId: visit.appointmentId || "WALK-IN",
+            date: new Date(visit.date).toLocaleDateString(),
+            diagnosis: visit.diagnosis || 'Medical Condition',
             doctorName: visit.doctorName || "Dr. Mayank Raval",
-            items: items
+            medicines: items
         });
     };
 
@@ -721,7 +721,8 @@ export default function PatientProfileClient({
                             visitHistory={visitHistory}
                             handleEditHistory={handleEditHistory}
                             handleDeleteHistory={handleDeleteHistory}
-                            handlePrintReceipt={handlePrintReceipt}
+                            handlePrintSickCertificate={handlePrintSickCertificate}
+                            handlePrintAirportCertificate={handlePrintAirportCertificate}
                             handleFileUpload={handleFileUpload}
                             uploadingId={uploadingId}
                         />

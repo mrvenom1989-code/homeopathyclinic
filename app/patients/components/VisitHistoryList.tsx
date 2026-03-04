@@ -7,13 +7,14 @@ interface VisitHistoryListProps {
     visitHistory: any[];
     handleEditHistory: (visit: any) => void;
     handleDeleteHistory: (id: string) => void;
-    handlePrintReceipt: (visit: any) => void;
+    handlePrintSickCertificate: (visit: any) => void;
+    handlePrintAirportCertificate: (visit: any) => void;
     handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
     uploadingId: string | null;
 }
 
 export default function VisitHistoryList({
-    visitHistory, handleEditHistory, handleDeleteHistory, handlePrintReceipt, handleFileUpload, uploadingId
+    visitHistory, handleEditHistory, handleDeleteHistory, handlePrintSickCertificate, handlePrintAirportCertificate, handleFileUpload, uploadingId
 }: VisitHistoryListProps) {
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -45,7 +46,8 @@ export default function VisitHistoryList({
 
                                 <div className="mt-2 flex items-center gap-3">
                                     {visit.reportUrl ? <a href={visit.reportUrl} target="_blank" className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded flex items-center gap-1 font-bold"><Eye size={12} /> View Report</a> : <label className={`text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded flex items-center gap-1 font-bold cursor-pointer ${uploadingId === visit.id ? 'opacity-50' : ''}`}>{uploadingId === visit.id ? <Loader2 size={12} className="animate-spin" /> : <FileUp size={12} />} Upload<input type="file" className="hidden" onChange={(e) => handleFileUpload(e, visit.id)} /></label>}
-                                    <button onClick={() => handlePrintReceipt(visit)} className="text-xs bg-yellow-50 text-yellow-700 px-2 py-1 rounded flex items-center gap-1 font-bold"><Printer size={12} /> Receipt</button>
+                                    <button onClick={() => handlePrintSickCertificate(visit)} className="text-[10px] bg-yellow-50 text-yellow-700 px-2 py-1 flex items-center gap-1 font-bold border border-yellow-200 rounded-lg hover:bg-yellow-100 transition shadow-sm"><Printer size={12} /> Sick Certificate</button>
+                                    <button onClick={() => handlePrintAirportCertificate(visit)} className="text-[10px] bg-purple-50 text-purple-700 px-2 py-1 flex items-center gap-1 font-bold border border-purple-200 rounded-lg hover:bg-purple-100 transition shadow-sm"><Printer size={12} /> Airport Clearance</button>
                                 </div>
                             </div>
                             <div className="flex gap-2">

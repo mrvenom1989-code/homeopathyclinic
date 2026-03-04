@@ -36,13 +36,13 @@ export default function StaffHeader() {
 
       {/* --- Logo Section --- */}
       <Link href="/dashboard" className="flex items-center gap-3 hover:opacity-95 transition">
-        <div className="shrink-0 overflow-hidden shadow-md rounded">
+        <div className="shrink-0 overflow-hidden shadow-md rounded-lg w-14 h-14 flex items-center justify-center bg-white">
           <Image
             src="/logo.jpg"
             alt="Clinic Logo"
-            width={160}
+            width={80}
             height={80}
-            className="w-28 h-auto object-cover"
+            className="w-full h-full object-cover"
             priority
           />
         </div>

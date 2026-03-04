@@ -7,21 +7,14 @@ import {
   ArrowRight, Phone, MapPin, Instagram, Facebook,
   Sparkles, Leaf, Calendar, CheckCircle2, Loader2, X, Wallet,
   Info, MessageCircle, Mail, Clock, ShieldCheck, Activity, Stethoscope, Heart, Droplets,
-  Smile, Wind, User, Brain
+  Smile, Wind, User, Brain, Star
 } from "lucide-react";
 import { createConsultationRequest } from "@/app/actions";
 
-
-
-const AILMENTS_CATEGORIES = [
-  { name: "Hair Loss", icon: Sparkles },
-  { name: "Skin Disorders", icon: Smile },
-  { name: "Respiratory", icon: Wind },
-  { name: "Child Health", icon: Heart },
-  { name: "Women Health", icon: User },
-  { name: "Weight Management", icon: Activity },
-  { name: "Diabetes", icon: Droplets },
-  { name: "Mental Health", icon: Brain },
+const PATIENT_REVIEWS = [
+  { name: "Priya Sharma", review: "Dr. Mayank's treatment completely cleared my chronic condition which I had been struggling with for 5 years. Truly life-changing experience and highly patient-centric approach." },
+  { name: "Amit Patel", review: "Very systematic and detailed diagnosis. We took my mother for her severe joint pain, and within 3 months, her pain reduced significantly. The classical homeopathy approach is the best." },
+  { name: "Sneha Desai", review: "Excellent doctor! My 6-year-old had frequent respiratory allergies. Since we started Dr. Mayank's treatment, his immunity has built up immensely. Highly recommended." }
 ];
 
 const TREATMENTS_TAB = [
@@ -114,11 +107,11 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200 transition-all duration-300 shadow-sm">
         <div className="flex justify-between items-center px-6 md:px-12 py-4 max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
-            <div className="shrink-0 overflow-hidden shadow-sm rounded-lg">
-              <Image src="/logo.jpg" alt="Logo" width={160} height={90} className="w-28 h-auto object-cover" />
+            <div className="shrink-0 overflow-hidden shadow-sm rounded-lg w-14 h-14 flex items-center justify-center bg-white">
+              <Image src="/logo.jpg" alt="Logo" width={80} height={80} className="w-full h-full object-cover" />
             </div>
             <div className="leading-none flex flex-col justify-center">
-              <h1 className="text-2xl font-bold text-teal-950 tracking-tight">Dr. Mayank Raval<span className="text-amber-500">.</span></h1>
+              <h1 className="text-2xl font-bold text-teal-950 tracking-tight">Dr. Mayank Raval</h1>
               <span className="text-[10px] font-semibold text-emerald-700 tracking-[0.15em] uppercase mt-1">Advanced Homeopathy</span>
             </div>
           </div>
@@ -246,23 +239,6 @@ export default function LandingPage() {
 
 
 
-      {/* --- AILMENTS WE SPECIALIZE IN --- */}
-      <section className="py-20 bg-white border-t border-slate-100">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <h2 className="text-3xl font-bold text-teal-950 mb-12 text-center md:text-left">We Specialise in 100+ Ailments</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {AILMENTS_CATEGORIES.map((cat, i) => (
-              <div key={i} className="flex flex-col md:flex-row items-center gap-4 group cursor-pointer p-4 rounded-xl hover:bg-[#f4f7f6] transition">
-                <div className="w-12 h-12 bg-blue-50 text-[#13382f] rounded-full flex items-center justify-center shrink-0 group-hover:bg-[#13382f] group-hover:text-white transition">
-                  <cat.icon size={24} strokeWidth={1.5} />
-                </div>
-                <span className="font-semibold text-emerald-900 text-center md:text-left">{cat.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* --- TREATMENTS TABS SECTION --- */}
       <section className="py-20 bg-[#f4f7f6] border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -313,6 +289,60 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* --- PATIENT REVIEWS (GOOGLE) --- */}
+      <section className="py-24 bg-white border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-teal-950 mb-4">Patient Stories</h2>
+              <p className="text-emerald-800 text-lg max-w-xl">
+                See what our patients say about their healing journey with our classical homeopathy approach.
+              </p>
+            </div>
+            <a
+              href="https://www.google.com/search?sca_esv=0c0ded2c55dfde36&rlz=1C1CHZN_enIN938IN938&sxsrf=ANbL-n4ppOYugM-ZmM-hXEx_-QB2CCb30Q:1772638538250&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOc-MkYuJrpwpbAb2eGSn9zmQaUOKTl7oNu0-LVswFa9EvhTRvvBmbt_WMUVeEA9n-0HIgulZ9eNq2BfztExqbc2qPamoM9L6e6KYW1tSUdpGJHRkeA%3D%3D&q=Lifetron+Homoeopathy+Clinic+Reviews&sa=X&ved=2ahUKEwiiyIyTyYaTAxWPh68BHbdBJs0Q0bkNegQIIRAF&biw=2131&bih=1048&dpr=0.9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-3 bg-white border border-slate-200 px-6 py-3.5 rounded-xl shadow-sm hover:shadow-md transition-all shrink-0"
+            >
+              <div className="flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={16} fill="#f59e0b" className="text-amber-500" />
+                ))}
+              </div>
+              <span className="font-bold text-teal-950">4.9/5 on Google</span>
+              <ArrowRight size={18} className="text-emerald-700 group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {PATIENT_REVIEWS.map((review, i) => (
+              <div key={i} className="bg-[#f4f7f6] p-8 rounded-3xl border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition duration-300">
+                <div className="flex gap-1 mb-6">
+                  {[...Array(5)].map((_, idx) => (
+                    <Star key={idx} size={16} fill="#f59e0b" className="text-amber-500" />
+                  ))}
+                </div>
+                <p className="text-teal-950 font-medium leading-relaxed mb-8 italic">
+                  "{review.review}"
+                </p>
+                <div className="flex items-center gap-4 mt-auto">
+                  <div className="w-10 h-10 bg-[#13382f] text-white flex items-center justify-center rounded-full font-bold">
+                    {review.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-teal-950 text-sm">{review.name}</h4>
+                    <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1 mt-0.5">
+                      <CheckCircle2 size={12} className="text-blue-500" /> Verified Patient
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* --- HOW IT WORKS / PHILOSOPHY --- */}
       <section className="py-24 bg-white border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-6 md:px-12 text-center">
@@ -354,7 +384,7 @@ export default function LandingPage() {
                 <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center text-white">
                   <Leaf size={18} />
                 </div>
-                <h1 className="text-2xl font-bold tracking-tight">Dr. Mayank<span className="text-amber-500">.</span></h1>
+                <h1 className="text-2xl font-bold tracking-tight">Dr. Mayank</h1>
               </div>
               <p className="text-slate-400 leading-relaxed max-w-sm">
                 Dedicated to providing pure, classical homeopathy. Your partner in genuine health, vitality, and well-being.
@@ -414,7 +444,7 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-teal-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-emerald-700">
-            <p>© {new Date().getFullYear()} Dr. Mayank Raval. All Rights Reserved.</p>
+            <p>© {new Date().getFullYear()} Dr. Mayank Raval All Rights Reserved.</p>
             <div className="flex gap-6 mt-4 md:mt-0">
               <Link href="#" className="hover:text-slate-300 transition">Privacy Policy</Link>
               <Link href="#" className="hover:text-slate-300 transition">Terms of Service</Link>

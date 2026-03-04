@@ -15,8 +15,8 @@ interface QueueItemProps {
     discountTypes: { [key: string]: 'PERCENT' | 'VALUE' };
     handleDiscountChange: (id: string, val: string) => void;
     toggleDiscountType: (id: string) => void;
-    printConsultationBill: (consult: any) => void;
-    printPharmacyBill: (consult: any, isReprint: boolean) => void;
+    printConsultationBill: (consult: any, isReprint?: boolean) => void;
+    printPrescription: (consult: any, isReprint?: boolean) => void;
     handleDispenseAll: (items: any[]) => void;
     handleDispenseItem: (id: string) => void;
     handleReopen?: (id: string) => void;
@@ -28,7 +28,7 @@ interface QueueItemProps {
 const QueueItem = memo(({
     consult, dispenseQtys, handleQtyChange, discounts, discountTypes,
     handleDiscountChange, toggleDiscountType,
-    printConsultationBill, printPharmacyBill, handleDispenseAll, handleDispenseItem,
+    printConsultationBill, printPrescription, handleDispenseAll, handleDispenseItem,
     handleReopen, handleDeleteHistoryRecord, openWalletModal, isHistory = false
 }: QueueItemProps) => {
 
@@ -144,8 +144,8 @@ const QueueItem = memo(({
                                 <MessageCircle size={18} />
                             </button>
 
-                            <button onClick={async () => { await persistFinancials(); printConsultationBill(consult); }} className="bg-blue-50 border border-blue-200 text-blue-700 font-bold px-3 py-2 rounded-lg text-xs hover:bg-blue-100 transition flex items-center gap-1"><FileText size={14} /> Consult</button>
-                            <button onClick={async () => { await persistFinancials(); printPharmacyBill(consult, false); }} className="bg-white border border-[#0f172a] text-[#0f172a] font-bold px-3 py-2 rounded-lg text-xs hover:bg-gray-50 transition flex items-center gap-1"><FileText size={14} /> Meds</button>
+                            <button onClick={async () => { await persistFinancials(); printConsultationBill(consult, false); }} className="bg-blue-50 border border-blue-200 text-blue-700 font-bold px-3 py-2 rounded-lg text-xs hover:bg-blue-100 transition flex items-center gap-1"><FileText size={14} /> Invoice</button>
+                            <button onClick={async () => { await persistFinancials(); printPrescription(consult, false); }} className="bg-white border border-[#0f172a] text-[#0f172a] font-bold px-3 py-2 rounded-lg text-xs hover:bg-gray-50 transition flex items-center gap-1"><FileText size={14} /> Prescription</button>
                             <button onClick={async () => { await persistFinancials(); handleDispenseAll(items); }} className="bg-[#0f172a] text-white font-bold px-4 py-2 rounded-lg text-xs shadow hover:bg-[#020617] transition flex items-center gap-2"><CheckCircle size={14} /> Dispense</button>
                         </div>
                     </div>
@@ -162,8 +162,8 @@ const QueueItem = memo(({
                             </button>
 
                             <button onClick={() => handleReopen && handleReopen(consult.id)} className="bg-amber-50 border border-amber-200 text-amber-700 font-bold px-3 py-2 rounded-lg text-xs hover:bg-amber-100 flex items-center gap-1 transition"><RotateCcw size={14} /> Reopen</button>
-                            <button onClick={() => printConsultationBill(consult)} className="bg-blue-50 border border-blue-200 text-blue-700 font-bold px-3 py-2 rounded-lg text-xs hover:bg-blue-100 flex items-center gap-1 transition"><Printer size={14} /> Consult</button>
-                            <button onClick={() => printPharmacyBill(consult, true)} className="bg-gray-100 border border-gray-300 text-gray-700 font-bold px-3 py-2 rounded-lg text-xs hover:bg-gray-200 flex items-center gap-1 transition"><Printer size={14} /> Pharma</button>
+                            <button onClick={() => printConsultationBill(consult, true)} className="bg-blue-50 border border-blue-200 text-blue-700 font-bold px-3 py-2 rounded-lg text-xs hover:bg-blue-100 flex items-center gap-1 transition"><Printer size={14} /> Invoice</button>
+                            <button onClick={() => printPrescription(consult, true)} className="bg-gray-100 border border-gray-300 text-gray-700 font-bold px-3 py-2 rounded-lg text-xs hover:bg-gray-200 flex items-center gap-1 transition"><Printer size={14} /> Prescription</button>
                             <button onClick={() => handleDeleteHistoryRecord && handleDeleteHistoryRecord(consult.id, consult.patientId)} className="bg-red-50 border border-red-200 text-red-600 font-bold px-3 py-2 rounded-lg text-xs hover:bg-red-100 flex items-center gap-1 transition"><Trash2 size={14} /></button>
                         </div>
                     </div>

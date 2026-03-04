@@ -186,24 +186,74 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
     }
   }, [historySearch, dateRange, activeTab]);
 
-  const printConsultationBill = async (consult: any) => {
-    // ✅ FIX: Fee is 0 if Direct Sale, else (500 - Appointment Discount)
+  const printConsultationBill = async (consult: any, isReprint = false) => {
+    // 1. Consultation Charge
     const isDirectSale = consult.doctorName === "Pharmacy Direct Sale";
     const apptDiscount = consult.appointment?.discount || 0;
     const fee = isDirectSale ? 0 : (500 - apptDiscount);
 
-    // ✅ FIX: Use Correct Name for Bill (Handle Guest)
+    const items = [];
+    if (fee > 0) {
+      items.push({
+        name: "Consultation Charge",
+        qty: 1,
+        amount: fee
+      });
+    }
+
+    // 2. Medication Charge
+    let medTotal = 0;
+    consult.prescriptions[0]?.items.forEach((item: any) => {
+      const qty = isReprint
+        ? (item.dispensedQty || 1)
+        : parseInt(dispenseQtys[item.id] || (item.dispensedQty ? item.dispensedQty.toString() : "1"));
+
+      const medName = item.medicine?.name || "Medicine";
+      let unitPrice = item.medicine?.price;
+
+      if (unitPrice === undefined || unitPrice === null) {
+        const medInfo = inventoryMap.get(medName.toLowerCase());
+        unitPrice = medInfo?.price || 0;
+      }
+      medTotal += (unitPrice * qty);
+    });
+
+    if (medTotal > 0) {
+      items.push({
+        name: "Medication Charge",
+        qty: 1,
+        amount: medTotal
+      });
+    }
+
+    // 3. Pharmacy Discount
+    const inputDiscount = parseFloat(discounts[consult.id] || "0");
+    const dbDiscount = parseFloat(consult.discount || "0");
+    const effectiveDiscount = (isReprint && inputDiscount === 0) ? dbDiscount : inputDiscount;
+    const discType = discountTypes[consult.id] || 'PERCENT';
+
+    let discountAmount = 0;
+    if (effectiveDiscount > 0 && medTotal > 0) {
+      if (isReprint && inputDiscount === 0) {
+        discountAmount = effectiveDiscount;
+        items.push({ name: `Pharmacy Discount (Flat)`, qty: 1, amount: -discountAmount, dosage: "" });
+      } else {
+        if (discType === 'PERCENT') {
+          discountAmount = (medTotal * effectiveDiscount) / 100;
+          items.push({ name: `Pharmacy Discount (${effectiveDiscount}%)`, qty: 1, amount: -discountAmount, dosage: "" });
+        } else {
+          discountAmount = effectiveDiscount;
+          items.push({ name: `Pharmacy Discount (Flat)`, qty: 1, amount: -discountAmount, dosage: "" });
+        }
+      }
+    }
+
+    if (items.length === 0) return alert("Nothing to bill");
+
     const patientNameForBill = getPatientDisplayName(consult);
-
-    const items = [{
-      name: "Consultation Charge",
-      qty: 1,
-      amount: fee
-    }];
-
     const dateStr = new Date(consult.createdAt).toISOString().slice(0, 10).replace(/-/g, "");
     const uniqueId = consult.id.slice(-4).toUpperCase();
-    const billNo = `OPD-${dateStr}-${uniqueId}`;
+    const billNo = `INV-${dateStr}-${uniqueId}`;
 
     const billDate = consult.appointment?.date
       ? new Date(consult.appointment.date).toLocaleDateString()
@@ -220,87 +270,36 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
     });
   };
 
-  const printPharmacyBill = async (consult: any, isReprint = false) => {
-    let subTotal = 0;
+  const printPrescription = async (consult: any, isReprint = false) => {
     const items = consult.prescriptions[0]?.items.map((item: any) => {
       const qty = isReprint
         ? (item.dispensedQty || 1)
         : parseInt(dispenseQtys[item.id] || (item.dispensedQty ? item.dispensedQty.toString() : "1"));
 
-      // ✅ FIX: Prioritize price in prescription record
       const medName = item.medicine?.name || "Medicine";
-      let unitPrice = item.medicine?.price;
-
-      if (unitPrice === undefined || unitPrice === null) {
-        const medInfo = inventoryMap.get(medName.toLowerCase());
-        unitPrice = medInfo?.price || 0;
-      }
-
-      const lineTotal = unitPrice * qty;
-      subTotal += lineTotal;
-
       const dosageInfo = [
         item.dosage,
         item.instruction ? `(${item.instruction})` : null
-      ].filter(Boolean).join(" "); // Joins dosage and instruction with a space
+      ].filter(Boolean).join(" ");
 
       return {
         name: `${medName} ${item.panchkarma && item.panchkarma !== "-" ? `[${item.panchkarma}]` : ""} (${item.unit || '-'})`,
         qty: qty,
-        amount: lineTotal,
-        dosage: dosageInfo || "-" // Pass the combined string
+        amount: 0,
+        dosage: dosageInfo || "-"
       };
     }) || [];
 
-    if (items.length === 0) return alert("No pharmacy items to bill");
-
-    const inputDiscount = parseFloat(discounts[consult.id] || "0");
-    const dbDiscount = parseFloat(consult.discount || "0");
-    const effectiveDiscount = (isReprint && inputDiscount === 0) ? dbDiscount : inputDiscount;
-    const discType = discountTypes[consult.id] || 'PERCENT';
-
-    let discountAmount = 0;
-
-    // ✅ Logic: History = Flat Amount | Live = Toggle Calculation
-    if (effectiveDiscount > 0) {
-      if (isReprint && inputDiscount === 0) {
-        discountAmount = effectiveDiscount;
-        items.push({
-          name: `PHARMACY DISCOUNT (Flat)`,
-          qty: 1,
-          amount: -discountAmount,
-          dosage: ""
-        });
-      } else {
-        if (discType === 'PERCENT') {
-          discountAmount = (subTotal * effectiveDiscount) / 100;
-          items.push({
-            name: `PHARMACY DISCOUNT (${effectiveDiscount}%)`,
-            qty: 1,
-            amount: -discountAmount,
-            dosage: ""
-          });
-        } else {
-          discountAmount = effectiveDiscount;
-          items.push({
-            name: `PHARMACY DISCOUNT (Flat)`,
-            qty: 1,
-            amount: -discountAmount,
-            dosage: ""
-          });
-        }
-      }
-    }
+    if (items.length === 0) return alert("No items to print on prescription");
 
     const dateStr = new Date(consult.createdAt).toISOString().slice(0, 10).replace(/-/g, "");
     const uniqueId = consult.id.slice(-4).toUpperCase();
-    const billNo = `PH-${dateStr}-${uniqueId}`;
+    const billNo = `RX-${dateStr}-${uniqueId}`;
 
     const billDate = consult.appointment?.date
       ? new Date(consult.appointment.date).toLocaleDateString()
       : new Date(consult.createdAt).toLocaleDateString();
 
-    // ✅ FIX: Use Correct Name for Bill
     const patientNameForBill = getPatientDisplayName(consult);
 
     await generateBill({
@@ -310,7 +309,8 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
       patientId: consult.patient?.readableId || consult.patient?.id.slice(0, 6) || "GUEST",
       appointmentId: consult.appointment?.readableId || "WALK-IN",
       doctorName: consult.doctorName || "Dr. Mayank Raval",
-      items
+      items,
+      isPrescription: true
     });
   };
 
@@ -631,7 +631,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                       handleDiscountChange={handleDiscountChange}
                       toggleDiscountType={toggleDiscountType}
                       printConsultationBill={printConsultationBill}
-                      printPharmacyBill={printPharmacyBill}
+                      printPrescription={printPrescription}
                       handleDispenseAll={handleDispenseAll}
                       handleDispenseItem={handleDispenseItem}
                       // ✅ PASS WALLET FUNCTION
@@ -682,7 +682,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                         handleDiscountChange={() => { }}
                         toggleDiscountType={() => { }}
                         printConsultationBill={printConsultationBill}
-                        printPharmacyBill={printPharmacyBill}
+                        printPrescription={printPrescription}
                         handleDispenseAll={() => { }}
                         handleDispenseItem={() => { }}
                         isHistory={true}
