@@ -149,7 +149,7 @@ export default function ReportsPage() {
             ) : data && (
                <div className="space-y-8">
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 print:grid-cols-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 print:grid-cols-3">
 
                      {/* ✅ Total Revenue (Masked) */}
                      <div
@@ -222,54 +222,7 @@ export default function ReportsPage() {
                         </p>
                      </div>
 
-                     {/* ✅ Panchkarma Card */}
-                     <div
-                        onClick={() => setFilter('PANCHKARMA')}
-                        className={`p-6 rounded-xl shadow-sm border cursor-pointer transition transform hover:scale-105 ${filter === 'PANCHKARMA' ? 'bg-purple-600 text-white border-purple-600' : 'bg-white border-gray-100 text-[#0f172a]'}`}
-                     >
-                        <div className="flex justify-between items-start">
-                           <div>
-                              <p className={`text-xs font-bold uppercase tracking-wider ${filter === 'PANCHKARMA' ? 'text-white/70' : 'text-gray-400'}`}>Procedure</p>
-                              <h3 className="text-sm font-bold mt-2 opacity-80">Procedures</h3>
-                           </div>
-                           <div className={`p-2 rounded-lg ${filter === 'PANCHKARMA' ? 'bg-white/20' : 'bg-purple-50 text-purple-700'}`}><Sparkles size={24} /></div>
-                        </div>
-                        <p className={`text-[10px] mt-2 ${filter === 'PANCHKARMA' ? 'text-white/80' : 'text-gray-400'}`}>
-                           {isRevenueVisible ? `₹ ${data.summary.panchkarmaRevenue.toLocaleString()}` : '****'} Generated
-                        </p>
-                     </div>
 
-                     {/* Weight Loss Card */}
-                     <div
-                        onClick={() => setShowWeightLossModal(true)}
-                        className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 cursor-pointer transition transform hover:scale-105 hover:shadow-md"
-                     >
-                        <div className="flex justify-between items-start mb-3">
-                           <div>
-                              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Weight Loss</p>
-                              <h3 className="text-2xl font-bold mt-1 text-[#0f172a]">{data.summary.totalWeightLoss?.toFixed(1) || 0} <span className="text-sm font-normal text-gray-500">kg</span></h3>
-                           </div>
-                           <div className="p-2 bg-pink-50 text-pink-700 rounded-lg"><Scale size={24} /></div>
-                        </div>
-
-                        {/* Gender Breakdown */}
-                        <div className="space-y-2 mt-2">
-                           <div className="flex items-center gap-2">
-                              <span className="text-[10px] font-bold text-blue-600 w-8">Male</span>
-                              <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                 <div className="h-full bg-blue-500" style={{ width: `${data.summary.totalWeightLoss > 0 ? (data.summary.weightLossByGender?.Male / data.summary.totalWeightLoss) * 100 : 0}%` }}></div>
-                              </div>
-                              <span className="text-[10px] font-bold text-gray-600">{data.summary.weightLossByGender?.Male?.toFixed(1) || 0}</span>
-                           </div>
-                           <div className="flex items-center gap-2">
-                              <span className="text-[10px] font-bold text-pink-600 w-8">Fem</span>
-                              <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                 <div className="h-full bg-pink-500" style={{ width: `${data.summary.totalWeightLoss > 0 ? (data.summary.weightLossByGender?.Female / data.summary.totalWeightLoss) * 100 : 0}%` }}></div>
-                              </div>
-                              <span className="text-[10px] font-bold text-gray-600">{data.summary.weightLossByGender?.Female?.toFixed(1) || 0}</span>
-                           </div>
-                        </div>
-                     </div>
                   </div>
 
                   {/* Charts Row */}
@@ -288,8 +241,7 @@ export default function ReportsPage() {
                                  />
                                  <Legend />
                                  <Bar dataKey="appointment" name="Appointments" stackId="a" fill="#0284c7" radius={[0, 0, 0, 0]} barSize={20} />
-                                 <Bar dataKey="pharmacy" name="Pharmacy" stackId="a" fill="#0f172a" radius={[0, 0, 0, 0]} barSize={20} />
-                                 <Bar dataKey="panchkarma" name="Procedure" stackId="a" fill="#9333ea" radius={[4, 4, 0, 0]} barSize={20} />
+                                 <Bar dataKey="pharmacy" name="Pharmacy" stackId="a" fill="#0f172a" radius={[4, 4, 0, 0]} barSize={20} />
                               </BarChart>
                            </ResponsiveContainer>
                         ) : (
@@ -318,7 +270,7 @@ export default function ReportsPage() {
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden print:shadow-none print:border">
                      <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
                         <h3 className="font-bold text-[#0f172a]">
-                           {filter === 'ALL' ? 'All Transactions' : filter === 'PHARMACY' ? 'Pharmacy Sales' : filter === 'PANCHKARMA' ? 'Therapies & Procedures' : 'Appointment History'}
+                           {filter === 'ALL' ? 'All Transactions' : filter === 'PHARMACY' ? 'Pharmacy Sales' : 'Appointment History'}
                         </h3>
                         <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{filteredTransactions.length} records</span>
                      </div>
@@ -367,51 +319,7 @@ export default function ReportsPage() {
                </div>
             )}
 
-            {/* Weight Loss Modal */}
-            {showWeightLossModal && data && (
-               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                  <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col animate-in zoom-in-95">
-                     <div className="bg-[#0f172a] p-4 flex justify-between items-center text-white rounded-t-xl shrink-0">
-                        <h3 className="font-bold text-lg flex items-center gap-2">
-                           <Scale size={20} /> Weight Loss Achievers
-                        </h3>
-                        <button onClick={() => setShowWeightLossModal(false)} className="hover:text-red-300"><X size={24} /></button>
-                     </div>
-                     <div className="p-4 flex-1 overflow-y-auto">
-                        {data.weightLossPatients && data.weightLossPatients.length > 0 ? (
-                           <table className="w-full text-sm">
-                              <thead className="bg-gray-100 text-xs uppercase text-gray-600 sticky top-0">
-                                 <tr>
-                                    <th className="p-3 text-left">Patient</th>
-                                    <th className="p-3 text-center">Initial</th>
-                                    <th className="p-3 text-center">Current</th>
-                                    <th className="p-3 text-right">Lost</th>
-                                 </tr>
-                              </thead>
-                              <tbody className="divide-y">
-                                 {data.weightLossPatients.map((p: any) => (
-                                    <tr key={p.id}>
-                                       <td className="p-3">
-                                          <div className="font-bold text-[#0f172a]">{p.name}</div>
-                                          <div className="text-xs text-gray-500">{p.readableId}</div>
-                                       </td>
-                                       <td className="p-3 text-center text-gray-600">{p.initial}</td>
-                                       <td className="p-3 text-center text-gray-600">{p.current}</td>
-                                       <td className="p-3 text-right font-bold text-green-600">-{p.loss} kg</td>
-                                    </tr>
-                                 ))}
-                              </tbody>
-                           </table>
-                        ) : (
-                           <p className="text-center text-gray-400 py-10">No weight loss records found.</p>
-                        )}
-                     </div>
-                     <div className="p-4 border-t text-center text-xs text-gray-500">
-                        Total Weight Lost: <span className="font-bold text-[#0f172a]">{data.summary.totalWeightLoss?.toFixed(1)} kg</span>
-                     </div>
-                  </div>
-               </div>
-            )}
+
 
          </div>
       </div>

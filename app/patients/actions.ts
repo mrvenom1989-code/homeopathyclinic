@@ -305,20 +305,20 @@ export async function savePrescription(patientId: string, visitData: any, consul
           date: today,
           startTime,
           endTime,
-          type: "Walk-in",
           patientName: p?.name || "Unknown",
           phone: p?.phone || "",
           doctor: visitData.doctorName || "Dr. Mayank Raval",
           status: "COMPLETED",
           patientId: patientId,
-          fee: 500,
-          discount: 0
+          fee: visitData.appointmentFee !== undefined ? Number(visitData.appointmentFee) : 500,
+          discount: 0,
+          type: visitData.consultationChargeType || "Walk-in"
         }
       });
       finalAppointmentId = newAppt.id;
     }
 
-    const apptDiscount = Number(visitData.appointmentDiscount ?? 0);
+    const apptFee = visitData.appointmentFee !== undefined ? Number(visitData.appointmentFee) : (Number(visitData.appointmentDiscount ?? 0) >= 500 ? 0 : 500);
     const pharmacyDiscount = Number(visitData.discount ?? 0);
     const paidAmount = Number(visitData.paidAmount ?? 0);
     const paymentMode = visitData.paymentMode || "Cash";
@@ -335,7 +335,12 @@ export async function savePrescription(patientId: string, visitData: any, consul
         if (aptExists) {
           await tx.appointment.update({
             where: { id: finalAppointmentId },
-            data: { status: "COMPLETED", discount: apptDiscount }
+            data: { 
+               status: "COMPLETED", 
+               fee: apptFee, 
+               discount: 0, 
+               type: visitData.consultationChargeType || aptExists.type 
+            }
           });
         }
       }

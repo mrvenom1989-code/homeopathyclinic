@@ -33,9 +33,21 @@ export default function VisitHistoryList({
                                     {visit.paidAmount > 0 && <span className="bg-gray-100 text-gray-600 px-1 rounded">Paid: ₹{visit.paidAmount}</span>}
                                 </div>
 
-                                {(visit.bloodPressure || visit.pulse || visit.temperature || visit.miasms || visit.aggravationAmelioration) && (
+                                {(visit.pulse || visit.temperature || visit.miasms || visit.aggravationAmelioration || (visit.repertoryRubrics && visit.repertoryRubrics !== "[]")) && (
                                     <div className="mt-2 text-xs text-gray-600 bg-gray-50 p-2 rounded border border-gray-100 grid grid-cols-2 gap-2">
-                                        {visit.bloodPressure && <div><span className="font-bold">BP:</span> {visit.bloodPressure}</div>}
+                                        {visit.repertoryRubrics && visit.repertoryRubrics !== "[]" && (
+                                            <div className="col-span-2">
+                                                <span className="font-bold">Repertory Rubrics:</span>{" "}
+                                                {(() => {
+                                                    try {
+                                                        const parsed = JSON.parse(visit.repertoryRubrics);
+                                                        return Array.isArray(parsed) ? parsed.join(", ") : visit.repertoryRubrics;
+                                                    } catch (e) {
+                                                        return visit.repertoryRubrics;
+                                                    }
+                                                })()}
+                                            </div>
+                                        )}
                                         {visit.pulse && <div><span className="font-bold">Pulse:</span> {visit.pulse}</div>}
                                         {visit.temperature && <div><span className="font-bold">Temp:</span> {visit.temperature}</div>}
                                         {visit.respiratoryRate && <div><span className="font-bold">Resp:</span> {visit.respiratoryRate}</div>}

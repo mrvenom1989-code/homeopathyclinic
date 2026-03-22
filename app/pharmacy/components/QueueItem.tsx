@@ -18,18 +18,20 @@ interface QueueItemProps {
     printConsultationBill: (consult: any, isReprint?: boolean) => void;
     printPrescription: (consult: any, isReprint?: boolean) => void;
     handleDispenseAll: (items: any[]) => void;
-    handleDispenseItem: (id: string) => void;
+    handleDispenseItem: (id: string, qtyOverride?: number, chargedPrice?: number) => void;
     handleReopen?: (id: string) => void;
     handleDeleteHistoryRecord?: (id: string, patientId: string) => void;
     openWalletModal: (patient: any) => void;
     isHistory?: boolean;
+    billingRates?: any[];
 }
 
 const QueueItem = memo(({
     consult, dispenseQtys, handleQtyChange, discounts, discountTypes,
     handleDiscountChange, toggleDiscountType,
     printConsultationBill, printPrescription, handleDispenseAll, handleDispenseItem,
-    handleReopen, handleDeleteHistoryRecord, openWalletModal, isHistory = false
+    handleReopen, handleDeleteHistoryRecord, openWalletModal, isHistory = false,
+    billingRates = []
 }: QueueItemProps) => {
 
     const isDirectSale = consult.doctorName === "Pharmacy Direct Sale";
@@ -49,8 +51,20 @@ const QueueItem = memo(({
             ? (item.dispensedQty || 1)
             : parseInt(dispenseQtys[item.id] || (item.dispensedQty ? item.dispensedQty.toString() : "1"));
 
-        const medPrice = item.medicine?.price || 0;
-        currentTotal += (qty * medPrice);
+        let lineTotal = 0;
+        if (item.chargedPrice !== null && item.chargedPrice !== undefined) {
+             lineTotal = item.chargedPrice;
+        } else {
+            const isOintment = item.unit === 'Ointment';
+            if (!isOintment && item.unit) {
+                const rateObj = billingRates.find(r => r.type === item.unit);
+                lineTotal = rateObj ? rateObj.rate : 0;
+            } else {
+                const medPrice = item.medicine?.price || 0;
+                lineTotal = qty * medPrice;
+            }
+        }
+        currentTotal += lineTotal;
     });
 
     const inputDiscount = parseFloat(discounts[consult.id] || "0");
@@ -188,7 +202,18 @@ const QueueItem = memo(({
                                 ? (item.dispensedQty || 1)
                                 : parseInt(dispenseQtys[item.id] || (item.dispensedQty ? item.dispensedQty.toString() : "1"));
 
-                            const itemCost = (item.medicine?.price || 0) * currentQty;
+                            let itemCost = 0;
+                            if (item.chargedPrice !== null && item.chargedPrice !== undefined) {
+                                itemCost = item.chargedPrice;
+                            } else {
+                                const isOintment = item.unit === 'Ointment';
+                                if (!isOintment && item.unit) {
+                                    const rateObj = billingRates.find(r => r.type === item.unit);
+                                    itemCost = rateObj ? rateObj.rate : 0;
+                                } else {
+                                    itemCost = (item.medicine?.price || 0) * currentQty;
+                                }
+                            }
                             return (
                                 <tr key={item.id} className={item.status === 'DISPENSED' ? 'bg-green-50' : ''}>
                                     <td className="p-3">
@@ -217,7 +242,7 @@ const QueueItem = memo(({
                                         {item.status === 'DISPENSED' ? (
                                             <span className="inline-flex items-center gap-1 text-green-700 font-bold text-xs bg-green-100 px-2 py-1 rounded-full"><CheckCircle size={12} /> Dispensed</span>
                                         ) : (
-                                            <button onClick={() => handleDispenseItem(item.id)} className="inline-flex items-center gap-1 bg-[#0284c7] text-[#0f172a] font-bold text-xs px-3 py-1.5 rounded hover:bg-[#0369a1]">Dispense</button>
+                                            <button onClick={() => handleDispenseItem(item.id, currentQty, itemCost)} className="inline-flex items-center gap-1 bg-[#0284c7] text-[#0f172a] font-bold text-xs px-3 py-1.5 rounded hover:bg-[#0369a1]">Dispense</button>
                                         )}
                                     </td>
                                 </tr>

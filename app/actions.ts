@@ -720,7 +720,7 @@ export async function getDispensedHistory(query: string, startDate?: string, end
   } catch (error) { return []; }
 }
 
-export async function dispenseMedicine(itemId: string, quantity: number) {
+export async function dispenseMedicine(itemId: string, quantity: number, chargedPrice?: number) {
   try {
     const item = await db.prescriptionItem.findUnique({ where: { id: itemId }, include: { medicine: true } });
     if (!item) return { success: false, error: "Item not found" };
@@ -740,9 +740,12 @@ export async function dispenseMedicine(itemId: string, quantity: number) {
       return { success: false, error: "Not enough stock" };
     }
 
+    const updateData: any = { status: 'DISPENSED', dispensedQty: quantity };
+    if (chargedPrice !== undefined) updateData.chargedPrice = chargedPrice;
+
     await db.prescriptionItem.update({
       where: { id: itemId },
-      data: { status: 'DISPENSED', dispensedQty: quantity }
+      data: updateData
     });
 
     // revalidatePath('/pharmacy');
@@ -754,13 +757,13 @@ export async function dispenseMedicine(itemId: string, quantity: number) {
 }
 
 // ✅ NEW BULK ACTION: Dispense All
-export async function dispenseAllMedicines(items: { id: string, quantity: number }[]) {
+export async function dispenseAllMedicines(items: { id: string, quantity: number, chargedPrice?: number }[]) {
   try {
     const results = [];
 
     // Process sequentially to avoid race conditions on same medicine stock if any
-    for (const { id, quantity } of items) {
-      const result = await dispenseMedicine(id, quantity);
+    for (const { id, quantity, chargedPrice } of items) {
+      const result = await dispenseMedicine(id, quantity, chargedPrice);
       results.push({ id, success: result.success, error: result.error });
     }
 
@@ -1035,7 +1038,7 @@ export async function getReportData(startDate: string, endDate: string) {
   });
 
   appointments.forEach(apt => {
-    const amount = (apt.discount && apt.discount >= 500) ? 0 : 500;
+    const amount = (apt.discount && apt.discount >= 500) ? 0 : (apt.fee || 500);
     appointmentRevenue += amount;
     const dateKey = new Date(apt.date).toISOString().split('T')[0];
     if (!dailyStats[dateKey]) dailyStats[dateKey] = { pharmacy: 0, panchkarma: 0, appointment: 0 };
@@ -1073,4 +1076,30 @@ export async function getReportData(startDate: string, endDate: string) {
     weightLossPatients: weightLossPatients.sort((a, b) => parseFloat(b.loss) - parseFloat(a.loss)),
     rawTransactions: rawTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   };
+}
+
+// ==========================================
+// 9. 💰 BILLING RATES (PHARMACY APP SETTINGS)
+// ==========================================
+
+export async function getBillingRates() {
+  try {
+    return await db.billingRate.findMany();
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function updateBillingRate(type: string, rate: number) {
+  try {
+    await db.billingRate.upsert({
+      where: { type },
+      update: { rate: parseFloat(rate.toString()) },
+      create: { type, rate: parseFloat(rate.toString()) }
+    });
+    revalidatePath('/pharmacy');
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: "Failed to update billing rate" };
+  }
 }

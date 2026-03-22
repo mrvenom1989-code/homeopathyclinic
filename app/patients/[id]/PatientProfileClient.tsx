@@ -23,9 +23,11 @@ import {
     updatePatientWallet
 } from "@/app/patients/actions";
 
+import { getBillingRates } from "@/app/actions";
+
 import {
     DOSAGE_OPTIONS, VEHICLE_OPTIONS, POTENCY_OPTIONS, INSTRUCTION_OPTIONS, WITH_OPTIONS,
-    REGULAR_DURATIONS, PHYSICAL_GENERALS_TEMPLATE
+    REGULAR_DURATIONS, PHYSICAL_GENERALS_TEMPLATE, CONSULTATION_TYPES
 } from "../constants";
 import { cleanName } from "../utils";
 import WalletModal from "../components/WalletModal";
@@ -112,8 +114,8 @@ export default function PatientProfileClient({
     const [consultationType, setConsultationType] = useState<'REGULAR' | 'PANCHKARMA'>('REGULAR');
     const [visitNote, setVisitNote] = useState("");
     const [panchkarmaNote, setPanchkarmaNote] = useState("");
-    const [isChargeable, setIsChargeable] = useState("YES");
-    const [bloodPressure, setBloodPressure] = useState("");
+    const [consultationCharge, setConsultationCharge] = useState("Follow-up Consultation");
+    const [billingRates, setBillingRates] = useState<any[]>([]);
     const [pulse, setPulse] = useState("");
     const [temperature, setTemperature] = useState("");
     const [respiratoryRate, setRespiratoryRate] = useState("");
@@ -139,7 +141,7 @@ export default function PatientProfileClient({
     const [newMed, setNewMed] = useState({
         medicineId: "",
         medicineName: "",
-        potency: "30c",
+        potency: "",
         dosage: "1-0-1",
         vehicle: "Pills",
         duration: "7 Days",
@@ -152,9 +154,10 @@ export default function PatientProfileClient({
     async function reFetchData() {
         try {
             setLoading(true);
-            const [pData, pharmacyData] = await Promise.all([
+            const [pData, pharmacyData, rates] = await Promise.all([
                 getPatientData(patientId),
-                getPharmacyInventory("", 10000)
+                getPharmacyInventory("", 10000),
+                getBillingRates()
             ]);
 
             if (pData) {
@@ -166,6 +169,7 @@ export default function PatientProfileClient({
                 setVisitHistory(formatVisitHistory(pData));
             }
             setInventory(pharmacyData || []);
+            setBillingRates(rates || []);
         } catch (err) {
             console.error("Load Failed", err);
         } finally {
@@ -304,8 +308,9 @@ export default function PatientProfileClient({
             return alert("Please add medicines or a note before saving.");
         }
 
-        // Logic: If Chargeable=YES, Discount=0. If NO, Discount=500.
-        const calculatedApptDiscount = isChargeable === "YES" ? 0 : 500;
+        // Logic: Dynamically look up rate from billingRates
+        const rateObj = billingRates.find(r => r.type === consultationCharge);
+        const calculatedApptFee = consultationCharge === "Free" ? 0 : (rateObj?.rate || 0);
 
         const visitData = {
             diagnosis: consultationType === 'REGULAR' ? visitNote : "Panchkarma Procedure",
@@ -314,13 +319,13 @@ export default function PatientProfileClient({
             doctorName: "Dr. Mayank Raval",
 
             appointmentId: selectedAppointmentId,
-            appointmentDiscount: calculatedApptDiscount,
+            appointmentFee: calculatedApptFee,
+            consultationChargeType: consultationCharge,
 
             // Default to 0 so it registers as "Due" in wallet if not paid immediately
             discount: 0,
             paidAmount: 0,
             paymentMode: "Cash",
-            bloodPressure,
             pulse,
             temperature,
             respiratoryRate,
@@ -355,8 +360,11 @@ export default function PatientProfileClient({
         setVisitNote(visit.diagnosis || "");
         setPanchkarmaNote(visit.notes || "");
         setSelectedAppointmentId(visit.appointmentId || null);
-        setIsChargeable(visit.appointmentDiscount >= 500 ? "NO" : "YES");
-        setBloodPressure(visit.bloodPressure || "");
+        if (visit.consultationChargeType) {
+            setConsultationCharge(visit.consultationChargeType);
+        } else {
+            setConsultationCharge(visit.appointmentDiscount >= 500 ? "Free" : "Follow-up Consultation");
+        }
         setPulse(visit.pulse || "");
         setTemperature(visit.temperature || "");
         setRespiratoryRate(visit.respiratoryRate || "");
@@ -384,8 +392,7 @@ export default function PatientProfileClient({
         setEditingVisitId(null);
         setVisitNote("");
         setPanchkarmaNote("");
-        setIsChargeable("YES");
-        setBloodPressure("");
+        setConsultationCharge("Follow-up Consultation");
         setPulse("");
         setTemperature("");
         setRespiratoryRate("");
@@ -573,8 +580,7 @@ export default function PatientProfileClient({
                             </div>
 
                             {/* VITALS SECTION */}
-                            <div className="mb-4 grid grid-cols-2 md:grid-cols-4 gap-3 bg-gray-50 border p-3 rounded-lg">
-                                <div><label className="text-[10px] font-bold uppercase text-gray-500">BP</label><input placeholder="e.g. 120/80" className="w-full p-2 border rounded text-xs bg-white" value={bloodPressure} onChange={(e) => setBloodPressure(e.target.value)} /></div>
+                            <div className="mb-4 grid grid-cols-2 md:grid-cols-3 gap-3 bg-gray-50 border p-3 rounded-lg">
                                 <div><label className="text-[10px] font-bold uppercase text-gray-500">Pulse</label><input placeholder="e.g. 72 bpm" className="w-full p-2 border rounded text-xs bg-white" value={pulse} onChange={(e) => setPulse(e.target.value)} /></div>
                                 <div><label className="text-[10px] font-bold uppercase text-gray-500">Temp</label><input placeholder="e.g. 98.6 F" className="w-full p-2 border rounded text-xs bg-white" value={temperature} onChange={(e) => setTemperature(e.target.value)} /></div>
                                 <div><label className="text-[10px] font-bold uppercase text-gray-500">Resp</label><input placeholder="e.g. 16/min" className="w-full p-2 border rounded text-xs bg-white" value={respiratoryRate} onChange={(e) => setRespiratoryRate(e.target.value)} /></div>
@@ -656,9 +662,9 @@ export default function PatientProfileClient({
 
                                     {consultationType === 'REGULAR' && (
                                         <>
-                                            <div className="col-span-6 md:col-span-2"><label className="text-[10px] font-bold uppercase text-gray-500">Potency</label><input list="potency-opts" className="w-full p-2 border rounded text-sm bg-white" value={newMed.potency} onChange={e => setNewMed({ ...newMed, potency: e.target.value })} /><datalist id="potency-opts">{POTENCY_OPTIONS.map(opt => <option key={opt}>{opt}</option>)}</datalist></div>
+                                            <div className="col-span-6 md:col-span-2"><label className="text-[10px] font-bold uppercase text-gray-500">Potency</label><select className="w-full p-2 border rounded text-sm bg-white" value={newMed.potency} onChange={e => setNewMed({ ...newMed, potency: e.target.value })}>{POTENCY_OPTIONS.map(opt => <option key={opt}>{opt}</option>)}</select></div>
                                             <div className="col-span-6 md:col-span-2"><label className="text-[10px] font-bold uppercase text-gray-500">Dosage</label><select className="w-full p-2 border rounded text-sm bg-white" value={newMed.dosage} onChange={e => setNewMed({ ...newMed, dosage: e.target.value })}>{DOSAGE_OPTIONS.map(opt => <option key={opt}>{opt}</option>)}</select></div>
-                                            <div className="col-span-6 md:col-span-2"><label className="text-[10px] font-bold uppercase text-gray-500">Vehicle</label><select className="w-full p-2 border rounded text-sm bg-white" value={newMed.vehicle} onChange={e => setNewMed({ ...newMed, vehicle: e.target.value })}>{VEHICLE_OPTIONS.map(opt => <option key={opt}>{opt}</option>)}</select></div>
+                                            <div className="col-span-6 md:col-span-2"><label className="text-[10px] font-bold uppercase text-gray-500">Qty</label><select className="w-full p-2 border rounded text-sm bg-white" value={newMed.vehicle} onChange={e => setNewMed({ ...newMed, vehicle: e.target.value })}>{VEHICLE_OPTIONS.map(opt => <option key={opt}>{opt}</option>)}</select></div>
                                         </>
                                     )}
 
@@ -703,11 +709,18 @@ export default function PatientProfileClient({
 
                             <div className="mt-6 border-t pt-4 flex justify-between items-center">
                                 <div className="flex items-center gap-4">
-                                    <span className="text-xs font-bold text-gray-500 uppercase flex items-center gap-1"><BadgePercent size={14} /> Consultation Charge?</span>
-                                    <div className="flex gap-2 bg-gray-100 p-1 rounded">
-                                        <button type="button" onClick={() => setIsChargeable("YES")} className={`px-3 py-1 rounded text-xs font-bold transition ${isChargeable === "YES" ? 'bg-green-600 text-white shadow' : 'text-gray-500 hover:bg-white'}`}>Yes (₹500)</button>
-                                        <button type="button" onClick={() => setIsChargeable("NO")} className={`px-3 py-1 rounded text-xs font-bold transition ${isChargeable === "NO" ? 'bg-blue-600 text-white shadow' : 'text-gray-500 hover:bg-white'}`}>No (Free)</button>
-                                    </div>
+                                    <span className="text-xs font-bold text-gray-500 uppercase flex items-center gap-1"><BadgePercent size={14} /> Consultation Charge</span>
+                                    <select 
+                                        className="bg-gray-100 p-2 rounded text-sm font-bold text-[#0f172a] outline-none focus:ring-2 border-transparent"
+                                        value={consultationCharge}
+                                        onChange={e => setConsultationCharge(e.target.value)}
+                                    >
+                                        {CONSULTATION_TYPES.map(ct => (
+                                            <option key={ct} value={ct}>
+                                                {ct} {ct !== "Free" ? `(₹${billingRates?.find(r => r.type === ct)?.rate || 0})` : "(₹0)"}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 <button type="button" onClick={handleSaveVisit} className={`px-6 py-2 rounded font-bold text-sm shadow flex items-center gap-2 ${editingVisitId ? 'bg-amber-400 text-black hover:bg-amber-500' : 'bg-[#0284c7] text-[#0f172a] hover:bg-[#0369a1]'}`}>

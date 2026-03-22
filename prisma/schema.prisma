@@ -173,6 +173,7 @@ model PrescriptionItem {
 
   status          String   @default("PENDING") 
   dispensedQty    Int?     @default(0)
+  chargedPrice    Float?   
 }
 
 // 8. ONLINE APPOINTMENT REQUESTS
@@ -190,4 +191,13 @@ model Counter {
   id    String @id @default(cuid())
   name  String @unique 
   value Int    @default(0)
+}
+
+// 10. BILLING RATE
+model BillingRate {
+  id        String   @id @default(cuid())
+  type      String   @unique 
+  rate      Float    @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

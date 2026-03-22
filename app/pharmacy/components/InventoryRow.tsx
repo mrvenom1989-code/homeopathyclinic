@@ -31,10 +31,18 @@ const InventoryRow = memo(({ med, editingId, editForm, setEditForm, handleEdit, 
             </td>
             <td className="p-4 text-gray-500">
                 {isEditing ? (
-                    <select className="w-full p-1 border rounded text-sm bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" value={editForm.type} onChange={e => setEditForm({ ...editForm, type: e.target.value })}>
-                        {MEDICINE_TYPES.map(t => <option key={t}>{t}</option>)}
-                    </select>
-                ) : med.type}
+                    <div className="space-y-1">
+                        <select className="w-full p-1 border rounded text-xs bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" value={editForm.type} onChange={e => setEditForm({ ...editForm, type: e.target.value })}>
+                            {MEDICINE_TYPES.map(t => <option key={t}>{t}</option>)}
+                        </select>
+                        <input className="w-full p-1 border rounded text-xs bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" placeholder="Potency e.g. 30c" value={editForm.potency || ''} onChange={e => setEditForm({ ...editForm, potency: e.target.value })} />
+                    </div>
+                ) : (
+                    <div className="space-y-0.5">
+                       <span className="font-medium text-gray-700">{med.type}</span>
+                       {med.potency && <div className="text-xs text-gray-400">{med.potency}</div>}
+                    </div>
+                )}
             </td>
             <td className="p-4">
                 {isEditing ? (

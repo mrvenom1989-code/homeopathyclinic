@@ -221,8 +221,7 @@ export default function PatientManager() {
                   <th className="p-4">ID</th>
                   <th className="p-4">Name / Phone</th>
                   <th className="p-4">Details</th>
-                  <th className="p-4">Height</th>
-                  <th className="p-4">Weight (Cur/Init)</th>
+                  <th className="p-4">Diagnosis</th>
                   <th className="p-4 text-center">Wallet</th>
                   <th className="p-4 text-right">Actions</th>
                 </tr>
@@ -254,14 +253,8 @@ export default function PatientManager() {
                           {p.age} Y / {p.gender} / {p.bloodGroup || "-"}
                         </td>
 
-                        <td className="p-4 font-medium text-purple-700">
-                          {p.height || <span className="text-gray-300">-</span>}
-                        </td>
-
-                        <td className="p-4">
-                          {p.currentWeight ? (
-                            <span className="font-bold text-green-700">{p.currentWeight} <span className="text-gray-400 font-normal text-xs">/ {p.initialWeight}</span></span>
-                          ) : "-"}
+                        <td className="p-4 text-gray-600 truncate max-w-xs" title={p.history}>
+                          {p.history ? p.history.substring(0, 50) + (p.history.length > 50 ? "..." : "") : "-"}
                         </td>
 
                         {/* Wallet Column */}
@@ -356,18 +349,18 @@ export default function PatientManager() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Initial Weight</label>
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Weight</label>
                     <input placeholder="e.g. 70 kg" className="w-full p-2 border rounded focus:border-[#0284c7] outline-none" value={formData.initialWeight} onChange={e => setFormData({ ...formData, initialWeight: e.target.value })} />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase text-green-600 mb-1">Current Weight</label>
-                    <input placeholder="e.g. 68 kg" className="w-full p-2 border rounded border-green-200 bg-green-50 focus:border-green-500 outline-none" value={formData.currentWeight} onChange={e => setFormData({ ...formData, currentWeight: e.target.value })} />
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Blood Pressure</label>
+                    <input placeholder="e.g. 120/80" className="w-full p-2 border rounded border-gray-200 bg-gray-50 focus:border-[#0284c7] outline-none" value={formData.currentWeight} onChange={e => setFormData({ ...formData, currentWeight: e.target.value })} />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Basic History / Allergies</label>
+                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Diagnosis</label>
                 <textarea rows={2} className="w-full p-2 border rounded bg-gray-50 focus:bg-white focus:border-[#0284c7] outline-none" value={formData.history} onChange={e => setFormData({ ...formData, history: e.target.value })} />
               </div>
 

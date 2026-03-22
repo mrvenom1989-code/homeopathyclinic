@@ -14,14 +14,16 @@ import {
   getDispensedHistory, searchPatients, savePrescription,
   reopenConsultation, deleteVisit,
   updateConsultationFinancials,
+  updatePatientWallet,
   createDirectSale,
-  updatePatientWallet
+  getBillingRates,
+  updateBillingRate
 } from "@/app/actions";
 import StaffHeader from "@/app/components/StaffHeader";
 import { generateBill } from "@/app/components/BillGenerator";
 
 import { MEDICINE_TYPES } from "./constants";
-import { VEHICLE_OPTIONS, POTENCY_OPTIONS } from "../patients/constants";
+import { VEHICLE_OPTIONS, POTENCY_OPTIONS, CONSULTATION_TYPES } from "../patients/constants";
 import { cleanName, getPatientDisplayName } from "./utils";
 import InventoryRow from "./components/InventoryRow";
 import QueueItem from "./components/QueueItem";
@@ -40,13 +42,15 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState<'queue' | 'inventory' | 'history'>('queue');
+  const [activeTab, setActiveTab] = useState<'queue' | 'inventory' | 'history' | 'billing'>('queue');
+  const [billingRates, setBillingRates] = useState<any[]>([]);
   const [inventory, setInventory] = useState<any[]>(initialInventory);
   const [queue, setQueue] = useState<any[]>(initialQueue);
   const [historyResults, setHistoryResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [inventorySearch, setInventorySearch] = useState("");
   const [showLowStockOnly, setShowLowStockOnly] = useState(false);
+  const [showNearExpOnly, setShowNearExpOnly] = useState(false);
 
   const [historySearch, setHistorySearch] = useState("");
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
@@ -59,7 +63,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newMed, setNewMed] = useState({
-    name: "", type: "Dilution", potency: "30c", vehicle: "Pills", stock: "0", price: "0", minStock: "24", mfgDate: "", expDate: ""
+    name: "", type: "Dilution", potency: "30c", vehicle: "", stock: "0", price: "0", minStock: "24", mfgDate: "", expDate: ""
   });
 
   const [dispenseQtys, setDispenseQtys] = useState<{ [key: string]: string }>({});
@@ -89,10 +93,8 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
     }
   }, [searchParams]);
 
-  const switchTab = (tab: 'queue' | 'inventory' | 'history') => {
+  const switchTab = (tab: 'queue' | 'inventory' | 'history' | 'billing') => {
     setActiveTab(tab);
-    // REMOVED: router.replace causes unnecessary re-renders/loading states
-    // router.replace(`/pharmacy?tab=${tab}`);
   };
 
   useEffect(() => {
@@ -108,8 +110,12 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
     console.log("refreshQueue START");
     setLoading(true);
     try {
-      const queueData = await getPharmacyQueue();
+      const [queueData, ratesData] = await Promise.all([
+        getPharmacyQueue(),
+        getBillingRates()
+      ]);
       setQueue(queueData);
+      setBillingRates(ratesData);
 
       // Initialize dispense quantities
       const initialQtys: { [key: string]: string } = {};
@@ -164,9 +170,22 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
       const stockVal = Number(m.stock);
       const minVal = (m.minStock !== null && m.minStock !== "" && m.minStock !== undefined) ? Number(m.minStock) : 24;
       const isLowStock = stockVal < minVal;
-      return showLowStockOnly ? (matchesSearch && isLowStock) : matchesSearch;
+
+      let isNearExp = false;
+      if (m.expDate) {
+         const exp = new Date(m.expDate);
+         const now = new Date();
+         const diffTime = exp.getTime() - now.getTime();
+         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+         isNearExp = diffDays <= 10;
+      }
+
+      if (showLowStockOnly && showNearExpOnly) return matchesSearch && isLowStock && isNearExp;
+      if (showLowStockOnly) return matchesSearch && isLowStock;
+      if (showNearExpOnly) return matchesSearch && isNearExp;
+      return matchesSearch;
     });
-  }, [inventory, inventorySearch, showLowStockOnly]);
+  }, [inventory, inventorySearch, showLowStockOnly, showNearExpOnly]);
 
   const inventoryMap = useMemo(() => {
     const map = new Map();
@@ -209,13 +228,27 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
         : parseInt(dispenseQtys[item.id] || (item.dispensedQty ? item.dispensedQty.toString() : "1"));
 
       const medName = item.medicine?.name || "Medicine";
-      let unitPrice = item.medicine?.price;
+      let lineTotal = 0;
 
-      if (unitPrice === undefined || unitPrice === null) {
-        const medInfo = inventoryMap.get(medName.toLowerCase());
-        unitPrice = medInfo?.price || 0;
+      const isOintment = item.unit === 'Ointment';
+      
+      if (!isOintment && item.unit) {
+         const rateObj = billingRates.find(r => r.type === item.unit);
+         if (rateObj) {
+            lineTotal = rateObj.rate; 
+         } else {
+            lineTotal = 0; 
+         }
+      } else {
+         let unitPrice = item.medicine?.price;
+         if (unitPrice === undefined || unitPrice === null) {
+            const medInfo = inventoryMap.get(medName.toLowerCase());
+            unitPrice = medInfo?.price || 0;
+         }
+         lineTotal = (unitPrice * qty);
       }
-      medTotal += (unitPrice * qty);
+
+      medTotal += lineTotal;
     });
 
     if (medTotal > 0) {
@@ -318,6 +351,16 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
     setDispenseQtys(prev => ({ ...prev, [itemId]: val }));
   };
 
+  const handleSaveBillingRate = async (type: string, rate: string) => {
+    const val = parseFloat(rate);
+    if (isNaN(val)) return alert("Invalid rate");
+    setLoading(true);
+    await updateBillingRate(type, val);
+    const updatedRates = await getBillingRates();
+    setBillingRates(updatedRates);
+    setLoading(false);
+  };
+
   const handleDiscountChange = (consultId: string, val: string) => {
     setDiscounts(prev => ({ ...prev, [consultId]: val }));
   };
@@ -329,18 +372,18 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
     }));
   };
 
-  const handleDispenseItem = async (itemId: string, qtyOverride?: number) => {
+  const handleDispenseItem = async (itemId: string, qtyOverride?: number, chargedPrice?: number) => {
     const qtyToDeduct = qtyOverride || parseInt(dispenseQtys[itemId]) || 1;
     if (qtyToDeduct <= 0) return alert("Invalid quantity");
 
-    const result = await dispenseMedicine(itemId, qtyToDeduct);
+    const result = await dispenseMedicine(itemId, qtyToDeduct, chargedPrice);
 
     if (result.success) {
       setQueue(prev => prev.map(consult => ({
         ...consult,
         prescriptions: consult.prescriptions.map((p: any) => ({
           ...p,
-          items: p.items.map((i: any) => i.id === itemId ? { ...i, status: 'DISPENSED', dispensedQty: qtyToDeduct } : i)
+          items: p.items.map((i: any) => i.id === itemId ? { ...i, status: 'DISPENSED', dispensedQty: qtyToDeduct, chargedPrice } : i)
         }))
       })));
 
@@ -358,10 +401,22 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
     // 1. Prepare Payload
     const itemsToDispense = items
       .filter(item => item.status === 'PENDING')
-      .map(item => ({
-        id: item.id,
-        quantity: parseInt(dispenseQtys[item.id] || "1")
-      }));
+      .map(item => {
+        const qty = parseInt(dispenseQtys[item.id] || "1");
+        let chargedPrice = 0;
+        const isOintment = item.unit === 'Ointment';
+        if (!isOintment && item.unit) {
+            const rateObj = billingRates.find(r => r.type === item.unit);
+            chargedPrice = rateObj ? rateObj.rate : 0;
+        } else {
+            chargedPrice = (item.medicine?.price || 0) * qty;
+        }
+        return {
+          id: item.id,
+          quantity: qty,
+          chargedPrice
+        };
+      });
 
     if (itemsToDispense.length === 0) return alert("Nothing to dispense.");
 
@@ -386,7 +441,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
     // Optimizing loop:
 
     for (const item of itemsToDispense) {
-      await dispenseMedicine(item.id, item.quantity);
+      await dispenseMedicine(item.id, item.quantity, item.chargedPrice);
     }
 
     // Update Local State for ALL at once
@@ -396,7 +451,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
         ...p,
         items: p.items.map((i: any) => {
           const dispensedItem = itemsToDispense.find(d => d.id === i.id);
-          return dispensedItem ? { ...i, status: 'DISPENSED', dispensedQty: dispensedItem.quantity } : i;
+          return dispensedItem ? { ...i, status: 'DISPENSED', dispensedQty: dispensedItem.quantity, chargedPrice: dispensedItem.chargedPrice } : i;
         })
       }))
     })));
@@ -605,6 +660,9 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
             <button onClick={() => switchTab('inventory')} className={`px-4 py-2 text-sm font-bold rounded-md transition flex items-center gap-2 ${activeTab === 'inventory' ? 'bg-white shadow text-[#0f172a]' : 'text-gray-500'}`}>
               <Package size={16} /> Inventory
             </button>
+            <button onClick={() => switchTab('billing')} className={`px-4 py-2 text-sm font-bold rounded-md transition flex items-center gap-2 ${activeTab === 'billing' ? 'bg-white shadow text-[#0f172a]' : 'text-gray-500'}`}>
+              <Banknote size={16} /> Billing
+            </button>
           </div>
         </div>
       </div>
@@ -636,6 +694,7 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                       handleDispenseItem={handleDispenseItem}
                       // ✅ PASS WALLET FUNCTION
                       openWalletModal={openWalletModal}
+                      billingRates={billingRates}
                     />
                   ))
                 )}
@@ -713,7 +772,12 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                     >
                       <Filter size={16} /> Low Stock
                     </button>
-
+                    <button
+                      onClick={() => setShowNearExpOnly(!showNearExpOnly)}
+                      className={`p-2 border rounded flex items-center gap-2 text-sm font-bold transition ${showNearExpOnly ? 'bg-orange-50 text-orange-600 border-orange-200' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                    >
+                      <Clock size={16} /> Near Exp.
+                    </button>
                     <button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2 bg-[#0f172a] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#020617]"><Plus size={16} /> Add New</button>
                   </div>
                 </div>
@@ -746,6 +810,67 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                     </tbody>
                   </table>
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'billing' && (
+              <div className="max-w-4xl mx-auto space-y-6">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="p-6 border-b bg-gray-50">
+                     <h2 className="text-lg font-bold text-[#0f172a]">Dispensing Qty Charges</h2>
+                     <p className="text-sm text-gray-500">Define the fixed charge for each Dispensing Qty type. These charges are applied flatly per item in the bill, regardless of the number of doses given. Ointments strictly follow inventory pricing.</p>
+                  </div>
+                  <div className="p-6 grid gap-4">
+                     {VEHICLE_OPTIONS.filter((v: string) => v !== "Ointment").map((opt: string) => {
+                        const existing = billingRates.find(r => r.type === opt);
+                        return (
+                           <div key={opt} className="flex justify-between items-center p-4 border rounded-lg bg-white shadow-sm">
+                              <span className="font-bold text-[#0f172a] w-1/3">{opt}</span>
+                              <div className="flex items-center gap-2">
+                                 <span className="text-gray-400">₹</span>
+                                 <input
+                                    type="number"
+                                    className="p-2 border rounded w-32 focus:ring-2 focus:ring-[#0284c7] outline-none font-bold text-[#0f172a]"
+                                    defaultValue={existing?.rate || 0}
+                                    onBlur={(e) => handleSaveBillingRate(opt, e.target.value)}
+                                 />
+                              </div>
+                           </div>
+                        );
+                     })}
+                     <div className="flex justify-between items-center p-4 border rounded-lg bg-gray-50 shadow-sm opacity-70">
+                        <span className="font-bold text-gray-700 w-1/3">Ointment</span>
+                        <span className="text-sm italic text-gray-500">Calculated Dynamically from Inventory Price</span>
+                     </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="p-6 border-b bg-gray-50">
+                     <h2 className="text-lg font-bold text-[#0f172a]">Consultation Charges</h2>
+                     <p className="text-sm text-gray-500">Define the charge for different types of consultations. These values are used when generating Patient Consultation bills.</p>
+                  </div>
+                  <div className="p-6 grid gap-4">
+                     {CONSULTATION_TYPES.filter((v: string) => v !== "Free").map((opt: string) => {
+                        const existing = billingRates.find(r => r.type === opt);
+                        return (
+                           <div key={opt} className="flex justify-between items-center p-4 border rounded-lg bg-white shadow-sm">
+                              <span className="font-bold text-[#0f172a] w-1/3">{opt}</span>
+                              <div className="flex items-center gap-2">
+                                 <span className="text-gray-400">₹</span>
+                                 <input
+                                    type="number"
+                                    className="p-2 border rounded w-32 focus:ring-2 focus:ring-[#0284c7] outline-none font-bold text-[#0f172a]"
+                                    defaultValue={existing?.rate || 0}
+                                    onBlur={(e) => handleSaveBillingRate(opt, e.target.value)}
+                                 />
+                              </div>
+                           </div>
+                        );
+                     })}
+                  </div>
+                </div>
+
               </div>
             )}
 
@@ -815,20 +940,14 @@ export default function PharmacyClient({ initialInventory = [], initialQueue = [
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Vehicle</label>
-                        <select className="w-full p-2.5 border rounded text-sm bg-white focus:ring-2 focus:ring-[#0284c7] outline-none" value={newMed.vehicle} onChange={e => setNewMed({ ...newMed, vehicle: e.target.value })}>
-                          <option value="">None</option>
-                          {VEHICLE_OPTIONS.map((v: string) => <option key={v}>{v}</option>)}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
                         <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Potency / Strength</label>
                         <input list="pharma-potency-opts" className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#0284c7] outline-none" placeholder="e.g. 30c" value={newMed.potency} onChange={e => setNewMed({ ...newMed, potency: e.target.value })} />
                         <datalist id="pharma-potency-opts">{POTENCY_OPTIONS.map((opt: string) => <option key={opt}>{opt}</option>)}</datalist>
                       </div>
+                    </div>
+
+
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Initial Stock</label>
                         <input className="w-full p-2.5 border rounded text-sm focus:ring-2 focus:ring-[#0284c7] outline-none" type="number" placeholder="0" value={newMed.stock} onChange={e => setNewMed({ ...newMed, stock: e.target.value })} />
