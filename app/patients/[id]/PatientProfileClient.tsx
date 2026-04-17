@@ -156,7 +156,7 @@ export default function PatientProfileClient({
             setLoading(true);
             const [pData, pharmacyData, rates] = await Promise.all([
                 getPatientData(patientId),
-                getPharmacyInventory("", 10000),
+                getPharmacyInventory("", 999999, true),
                 getBillingRates()
             ]);
 
@@ -653,7 +653,7 @@ export default function PatientProfileClient({
                                         <input type="text" className="w-full p-2 border rounded-md text-sm bg-white" value={medQuery} onChange={(e) => { setMedQuery(e.target.value); setShowMedList(true); }} onFocus={() => setShowMedList(true)} placeholder="Search medicine..." />
                                         {showMedList && (
                                             <div className="absolute top-full mt-1 left-0 w-full bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto z-40">
-                                                {inventory.filter(i => i.name.toLowerCase().includes(medQuery.toLowerCase())).map(item => (
+                                                {inventory.filter(i => i.name.toLowerCase().includes(medQuery.toLowerCase())).slice(0, 100).map(item => (
                                                     <button type="button" key={item.id} onClick={() => selectMedicine(item)} className="w-full text-left px-3 py-2 text-sm hover:bg-green-50 text-[#0f172a] border-b">{item.name}</button>
                                                 ))}
                                             </div>
